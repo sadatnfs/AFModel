@@ -1808,3 +1808,30 @@
       return(binded_data)
       
     }
+
+    
+    
+    #############################################
+    ### Some math funks
+    #############################################
+    
+    ## Lemon squeeze logit transformer
+    logit_trans <- function(x) {
+      return( log(((x*999/1000) + (0.5/1000))/(1 - ((x*999/1000) + (0.5/1000)))) )
+    }
+    
+    ## Inv Lemon squeeze logit transformer
+    inv_logit_trans <- function(x) {
+      return( ((exp(x)/(1 +exp(x))) - (0.5/1000))*(1000/999)  )
+    }
+    
+     
+    
+    logit_fn <- function(y, y_min, y_max, epsilon){
+      log((y-(y_min-epsilon))/(y_max+epsilon-y))
+    }
+    
+    antilogit_fn <- function(antiy, y_min, y_max, epsilon){
+      (exp(antiy)*(y_max+epsilon)+y_min-epsilon)/
+      (1+exp(antiy))
+    }

@@ -1,0 +1,30 @@
+Package: AFModel
+Type: Package
+Title: Automated Forecasting functions for Panel Data using TMB
+Version: 0.1.0
+Authors@R: person("Nafis", "Sadat", email = "sadatnfs@uw.edu",
+  role = c("aut", "cre"))
+Description: Necessary functions for forecasting panel data using TMB,
+    only deployable for Institute for Health Metrics and Evaluation parallel
+    computing setup
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/sadatnfs/AFModel
+BugReports: https://github.com/sadatnfs/AFModel/issues
+NeedsCompilation: yes
+Depends: R (>= 3.4.0)
+Imports:
+    TMB,
+    MASS,
+    RMySQL,
+    data.table,
+    parallel,
+    feather,
+    argparse,
+    foreach,
+    doParallel,
+    compiler,
+    ggplot2,
+    arm,
+    Matrix
+License: GNU

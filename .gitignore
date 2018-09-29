@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+*.so
+*.o
+.DS_Store
+._.DS_Store
+*.Rcheck
+*.mk
+.Rbuildignore
