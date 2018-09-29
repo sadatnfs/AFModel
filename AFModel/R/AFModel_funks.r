@@ -1113,13 +1113,13 @@
       sfa_prep <- copy(data)
       
       if(transform == "log") {
-        sfa_prep[, yoy_pc:= 100*(shift(exp(get(depvar)), type = "lead") - (exp(get(depvar))) ) / ((exp(get(depvar)))) , panelvar]		
+        sfa_prep[, yoy_pc:= 100*(shift(exp(get(depvar)), type = "lead") - (exp(get(depvar))) ) / ((exp(get(depvar)))) , panelvar]       
       } 
       if(transform == "logit") {
-        sfa_prep[, yoy_pc:= 100*(shift(arm::invlogit(get(depvar)), type = "lead") - (arm::invlogit(get(depvar)))  ) / ((arm::invlogit(get(depvar)))) , panelvar]				
+        sfa_prep[, yoy_pc:= 100*(shift(arm::invlogit(get(depvar)), type = "lead") - (arm::invlogit(get(depvar)))  ) / ((arm::invlogit(get(depvar)))) , panelvar]                
       } 
       if(transform == "logit_trans") {
-        sfa_prep[, yoy_pc:= 100*(shift(inv_logit_trans(get(depvar)), type = "lead") - (inv_logit_trans(get(depvar)))  ) / ((inv_logit_trans(get(depvar)))) , panelvar]				
+        sfa_prep[, yoy_pc:= 100*(shift(inv_logit_trans(get(depvar)), type = "lead") - (inv_logit_trans(get(depvar)))  ) / ((inv_logit_trans(get(depvar)))) , panelvar]              
       } 
       
       sfa_prep <- sfa_prep[yoy_pc < 100 & yoy_pc>-100  ]
