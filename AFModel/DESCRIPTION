@@ -16,9 +16,9 @@ Depends: R (>= 3.4.0)
 Author: Nafis Sadat [aut]
 Maintainer: Nafis Sadat <sadatnfs@uw.edu>
 Depends:
-    TMB,
     MASS,
     RMySQL,
+    TMB,
     data.table,
     parallel,
     feather,
@@ -30,20 +30,4 @@ Depends:
     arm,
     Matrix,
     frontier
-Imports:
-    TMB,
-    frontier,
-    MASS,
-    RMySQL,
-    data.table,
-    parallel,
-    feather,
-    argparse,
-    foreach,
-    doParallel,
-    compiler,
-    ggplot2,
-    arm,
-    Matrix
-LinkingTo: TMB
 License: GNU
