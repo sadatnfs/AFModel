@@ -17,17 +17,17 @@ Maintainer: Nafis Sadat <sadatnfs@uw.edu>
 LinkingTo: TMB
 Depends:
     MASS,
-    TMB,
     RMySQL,
-    data.table,
     parallel,
     feather,
     argparse,
     foreach,
     doParallel,
-    compiler,
     ggplot2,
     arm,
     Matrix,
-    frontier
+    frontier,
+    compiler,
+    TMB,
+    data.table
 License: GNU
