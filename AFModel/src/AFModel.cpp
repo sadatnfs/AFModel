@@ -114,6 +114,47 @@
   }
   
   
+  
+  // NAME:    expit
+  // DESC:    takes a number on logit scale and returns it to the zero to
+  //          one number line
+  // IN:      Type
+  // OUT:     Type
+  template<class Type>
+  Type expit(Type logit_param){
+    Type param = exp(logit_param) / (1 + exp(logit_param));
+    return param;
+  }
+  
+  // Expit a matrix
+  template<class Type>
+  matrix<Type> expit_matrix(matrix<Type> mat_input){
+    matrix<Type> y_out(mat_input); 
+    
+    for (int l = 0; l < mat_input.rows(); l++) {
+      for (int t = 0; t < mat_input.cols(); t++) {
+        y_out(l,t) = expit(mat_input(l,t));
+      }
+    }
+    
+    return y_out;
+  }
+  
+  // Expit a vector
+  template<class Type>
+  vector<Type> expit_vector(vector<Type> mat_input){
+    vector<Type> y_out(mat_input); 
+    
+    for (int t = 0; t < mat_input.rows(); t++) {
+      y_out[t] = expit(mat_input[t]);
+    } 
+    
+    return y_out;
+  }
+  
+  
+  
+  
   // NAME: Objective function
   // DESC: YOU KNOW WHAT IT DO
   template<class Type>
@@ -131,6 +172,12 @@
     
     // Include convergence term?
     DATA_INTEGER(convergence_term);
+    
+    // Include scaled convergence term?
+    DATA_INTEGER(scaled_convergence_term);
+    
+    // Input for scaled convergence term
+    DATA_MATRIX(Y_scaled_conv);
     
     // First diff Y
     matrix<Type> Y = diff_y(Y_input, fd);
@@ -235,7 +282,7 @@
         }
         
         // Set prior on RE SEs
-        nll -= dgamma(exp(loggroup), Type(.1), Type(10.), true);
+        // nll -= dgamma(exp(loggroup), Type(.1), Type(10.), true);
         
         REPORT(loggroup);
         
@@ -304,7 +351,7 @@
           }
           
           // Set prior on RE SEs
-          nll -= dgamma(exp(loggrcoef[dim0]), Type(.1), Type(10.), true);
+          // nll -= dgamma(exp(loggrcoef[dim0]), Type(.1), Type(10.), true);
         }
         
 
@@ -322,7 +369,6 @@
     ////// Convergence term (under a first-difference model, it's the lagged level value of Y) //////
     
     if(fd == 1 & convergence_term == 1) {
-      
 
       PARAMETER(c);
       
@@ -336,7 +382,18 @@
       
     }
     
+    ////// Scaled Convergence term (use custom data input for this) //////
     
+    if(fd == 1 & scaled_convergence_term == 1) {
+      
+      PARAMETER(scaled_c);
+      
+      // Add scaled convergence term for parameter estimation //
+      Y_hat  += Y_scaled_conv  * scaled_c;
+      
+      REPORT(scaled_c);
+      
+    }
     
     ////// Autoregressive processes //////
     
@@ -354,6 +411,8 @@
       // ar_mod == 2: only country AR as fixed effects
       // ar_mod == 3: global AR plus country random AR with zero mean
       
+      // Will we constrain the parameter to (0,1)?
+      DATA_INTEGER(ar_constrain);
       
       
       if(ar_mod == 1) {
@@ -361,11 +420,15 @@
         // Vector of global ARs
         PARAMETER_VECTOR(rho_global);
         
+        // Add a hard constrain on the AR param
+        vector<Type> fit_rho_global = expit_vector(rho_global);
+        
+        
         // Add to nll and Y_hat
         for(int arr=0; arr< ar; arr++) {
             
             // Add a prior distribution on the rho to try and restrict to (-1,1)
-            nll -= dnorm(rho_global[arr], Type(0.0), Type(1.0), true); 
+            // nll -= dnorm(rho_global[arr], Type(0.0), Type(1.0), true); 
           
           for(int i=0; i< Y.rows(); i++) {
             // Add to fit
@@ -374,14 +437,23 @@
               }
               if(t > arr ) {
                 if(!isNA(Y(i,t-(arr+1)))) {
-                  Y_hat(i,t) += Y(i,t-(arr+1)) * rho_global[arr];   
+                  
+                  if(ar_constrain == 1) {
+                    Y_hat(i,t) += Y(i,t-(arr+1)) * fit_rho_global[arr];     
+                  } else {
+                    Y_hat(i,t) += Y(i,t-(arr+1)) * rho_global[arr];   
+                  }
+                  
                 }
               }
             }
           }
         }
         
-        REPORT(rho_global);
+        REPORT(fit_rho_global);
+        if(ar_constrain == 1) {
+          ADREPORT(fit_rho_global);
+        }
         
       }
       
@@ -390,12 +462,15 @@
         // Matrix of AR parameters by country
         PARAMETER_MATRIX(rho_country);
         
+        // Add a hard constrain on the AR param
+        matrix<Type> fit_rho_country = expit_matrix(rho_country);
+        
         // Add to nll and Y_hat
           for(int arr=0; arr< ar; arr++) {
             for(int i=0; i< Y.rows(); i++) {
     
               // Add a prior distribution on the rho to try and restrict to (-1,1)
-              nll -= dnorm(rho_country(i,arr), Type(0.0), Type(1.0), true); 
+              // nll -= dnorm(rho_country(i,arr), Type(0.0), Type(1.0), true); 
               
               // Add both the AR terms to our fits
               for(int t=0; t < Y.cols(); t++) {
@@ -403,14 +478,23 @@
                 }
                 if(t > arr ) {
                   if(!isNA(Y(i,t-(arr+1)))) {
-                    Y_hat(i,t) += (Y(i,t-(arr+1)) * rho_country(i,arr)) ; 
+                    
+                    if(ar_constrain == 1) {
+                      Y_hat(i,t) += (Y(i,t-(arr+1)) * fit_rho_country(i,arr)) ; 
+                    } else {
+                      Y_hat(i,t) += (Y(i,t-(arr+1)) * rho_country(i,arr)) ; 
+                    }
+                    
                   }
                 }
               }
             }
           }
           
-        REPORT(rho_country);
+        REPORT(fit_rho_country);
+          if(ar_constrain == 1) {
+            ADREPORT(fit_rho_country);
+          }
       
       }
         
@@ -425,15 +509,27 @@
         // SD of country rhos
         PARAMETER_VECTOR(logSigma_rho_country);
         
+        
+        // Constrain the AR terms
+        matrix<Type> fit_rho_country = expit_matrix(rho_country);
+        vector<Type> fit_rho_global = expit_vector(rho_global);
+        
+        
         // Add to nll and Y_hat
         for(int arr=0; arr< ar; arr++) {
           
           // Add a prior distribution on the global rho to try and restrict to (-1,1)
-          nll -= dnorm(rho_global[arr], Type(0.0), Type(1.0), true); 
+          // nll -= dnorm(rho_global[arr], Type(0.0), Type(1.0), true); 
           
-          // Add the SE of country ARs
-          for(int m=0; m<rho_country.rows(); m++){
-            nll -= dnorm(rho_country(m, arr), Type(0.), exp(logSigma_rho_country[arr]), true);
+          // Add the prior of country ARs
+          for(int m=0; m<fit_rho_country.rows(); m++){
+            
+            if(ar_constrain == 1) {
+              nll -= dnorm(fit_rho_country(m, arr), Type(0.), exp(logSigma_rho_country[arr]), true);
+            } else {
+              nll -= dnorm(rho_country(m, arr), Type(0.), exp(logSigma_rho_country[arr]), true);
+            }
+            
           }
           
           
@@ -445,20 +541,28 @@
               }
               if(t > arr ) {
                 if(!isNA(Y(i,t-(arr+1)))) {
-                  Y_hat(i,t) += (Y(i,t-(arr+1)) * rho_country(i,arr)) + (Y(i,t-(arr+1)) * rho_global[arr]) ; 
+                  if(ar_constrain == 1) {
+                    Y_hat(i,t) += (Y(i,t-(arr+1)) * fit_rho_country(i,arr)) + (Y(i,t-(arr+1)) * fit_rho_global[arr]) ; 
+                  } else {
+                    Y_hat(i,t) += (Y(i,t-(arr+1)) * rho_country(i,arr)) + (Y(i,t-(arr+1)) * rho_global[arr]) ; 
+                  }
                 }
               }
             }
           }
           
           // Set prior on AR RE SEs
-          nll -= dgamma(exp(logSigma_rho_country[arr]), Type(.1), Type(10.), true);
+          // nll -= dgamma(exp(logSigma_rho_country[arr]), Type(.1), Type(10.), true);
           
         }
         
         REPORT(rho_global);
         REPORT(rho_country);
         
+        if(ar_constrain == 1) {
+          ADREPORT(fit_rho_global);
+          ADREPORT(fit_rho_country);
+        }
       } 
 
     }
@@ -519,7 +623,7 @@
           
           
           // Set prior on MA RE SEs
-          nll -= dgamma(exp(var_theta_global[maa]), Type(.1), Type(10.), true);
+          // nll -= dgamma(exp(var_theta_global[maa]), Type(.1), Type(10.), true);
         }
         
         REPORT(theta_global);
@@ -554,7 +658,7 @@
           }
           
           // Set prior on MA RE SEs
-          nll -= dgamma(exp(var_theta_country[maa]), Type(.1), Type(10.), true);
+          // nll -= dgamma(exp(var_theta_country[maa]), Type(.1), Type(10.), true);
           
         }
         REPORT(theta_country);
@@ -603,8 +707,8 @@
           
           
           // Set prior on MA RE SEs
-          nll -= dgamma(exp(var_theta_country[maa]), Type(.1), Type(10.), true);
-          nll -= dgamma(exp(var_theta_global[maa]), Type(.1), Type(10.), true);
+          // nll -= dgamma(exp(var_theta_country[maa]), Type(.1), Type(10.), true);
+          // nll -= dgamma(exp(var_theta_global[maa]), Type(.1), Type(10.), true);
         }
         
         
@@ -627,7 +731,7 @@
     // We start from t+ar time period, since having AR terms will have blanks in the prediction, ya know
     for(int i=0; i< Y.rows(); i++) {
       for(int t=ar; t < Y.cols(); t++) {
-        if(!isNA(Y(i,t)) & !isNA(Y_hat(i,t))) {
+        if(!isNA(Y(i,t)) & !isNA(Y_hat(i,t)) & !CppAD::isnan(Y(i,t)) & !CppAD::isnan(Y_hat(i,t)) ) {
          nll -= dnorm(Y(i,t), Y_hat(i,t), exp(logSigma) * Type(pow(Type(Y.cols() - t + 1), weight_decay)) , true);
         }
       }
