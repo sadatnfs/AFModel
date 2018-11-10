@@ -12,12 +12,12 @@ LazyData: TRUE
 URL: https://github.com/sadatnfs/AFModel
 BugReports: https://github.com/sadatnfs/AFModel/issues
 NeedsCompilation: yes
-Depends: R (>= 3.4.0)
 Author: Nafis Sadat [aut]
 Maintainer: Nafis Sadat <sadatnfs@uw.edu>
 LinkingTo: TMB
 Depends:
     MASS,
+    TMB,
     RMySQL,
     data.table,
     parallel,
