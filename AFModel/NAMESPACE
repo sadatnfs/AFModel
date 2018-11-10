@@ -1,2 +1,5 @@
 exportPattern("^[[:alpha:]]+")
 import(TMB)
+importFrom(TMB, sdreport)
+importFrom(TMB, sdreport)
+useDynLib(AFModel)

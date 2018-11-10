@@ -137,6 +137,9 @@
       ## Fdiff?
       fdiff <- array_grid[, fdiff]
       
+      ## AR constrain?
+      ar_constrain <- array_grid[, ar_constrain]
+      
       ## Conv?
       if(draws == F) {
         conv <- array_grid[, conv]
@@ -144,11 +147,19 @@
         conv <- ifelse(!is.na(array_grid$conv), T, F)
       }
       
+      ## Scaled conv?
+      if(draws == F) {
+        scaled_lev_conv <- array_grid[, scaled_lev_conv]
+      } else if(draws) {
+        scaled_lev_conv <- ifelse(!is.na(array_grid$scaled_c), T, F)
+      }
+      
       ## Outlist
       return(list(xvar = covars, yvar = yvar, re_coef = re_coefs, 
                   ar = ar, ar_mod = ar_mod, ma = ma, ma_mod = ma_mod, weight_decay = weight_decay,
                   global_int = global_int, country_int = country_int, country_int_dist = country_int_dist,
-                  fdiff = fdiff, conv = conv, draws =  draws, model = model))
+                  fdiff = fdiff, conv = conv, scaled_lev_conv = scaled_lev_conv,
+                  draws =  draws, model = model, ar_constrain = ar_constrain))
       
     }
     
@@ -166,7 +177,9 @@
                                 weight_decay = 0.,
                                 chaos = T,
                                 fd = F, 
-                                conv = F) {
+                                conv = F,
+                                scaled_lev_conv = F,
+                                ar_constrain = F) {
       
       
       ## Convergence cannot be true without first diff
@@ -177,19 +190,39 @@
       
       
       ## Prep the dependent variable: cast out and create a matrix (long on country, wide on years)
-      Y_input = dcast(input_data[!is.na(get(yvar)) & year >= start_year & year <= end_fit, .(iso3, year, get(yvar))], iso3 ~ year, value.var = 'V3')
-      
-      Y_input_rows <- Y_input$iso3
-      Y_input_cols <- colnames(Y_input)
-      
-      Y_input = as.matrix(Y_input[, iso3:=NULL])
-      colnames(Y_input) <- Y_input_cols
-      rownames(Y_input) <- Y_input_rows
+        Y_input = dcast(input_data[!is.na(get(yvar)) & year >= start_year & year <= end_fit, .(iso3, year, get(yvar))], iso3 ~ year, value.var = 'V3')
+        
+        Y_input_rows <- Y_input$iso3
+        Y_input_cols <- colnames(Y_input)
+        
+        Y_input = as.matrix(Y_input[, iso3:=NULL])
+        colnames(Y_input) <- Y_input_cols
+        rownames(Y_input) <- Y_input_rows
       
       
       ## Create matrix of diffs of Y
-      Y_diff = Y_input[, 2:ncol(Y_input)] - Y_input[, 1:ncol(Y_input)-1]
+        Y_diff = Y_input[, 2:ncol(Y_input)] - Y_input[, 1:ncol(Y_input)-1]
       
+      ## Create lagged Y_input for scaled lev conv
+          Y_scaled_conv = dcast(input_data[!is.na(Y_scaled_conv) & year >= start_year & year <= end_fit, .(iso3, year, Y_scaled_conv)], iso3 ~ year, value.var = 'Y_scaled_conv')
+          
+          Y_scaled_conv_input_rows <- Y_scaled_conv$iso3
+          Y_scaled_conv_input_cols <- colnames(Y_scaled_conv)
+          
+          Y_scaled_conv = as.matrix(Y_scaled_conv[, iso3:=NULL])
+          colnames(Y_scaled_conv) <- Y_scaled_conv_input_cols
+          rownames(Y_scaled_conv) <- Y_scaled_conv_input_rows
+          
+          ## Strip the first entry of the convergence matrix (first time period)
+          Y_scaled_conv <- Y_scaled_conv[, 2:ncol(Y_scaled_conv)]
+          
+          ## Get the global scalar
+          conv_scaler <- input_data$conv_scaler[1]
+        
+          
+      
+        
+        
       ## Create array of covariates
       if(!is.null(xvar)) {
         
@@ -248,6 +281,8 @@
       
       ## Create our list of data and params
       data <- list(Y_input = Y_input,
+                   Y_scaled_conv = Y_scaled_conv,
+                   conv_scaler = conv_scaler,
                    x_input = x_input,
                    fe = fe,
                    re_coef_input = re_coef_input,
@@ -261,10 +296,12 @@
                    ma= ma, 
                    fd = fd*1,
                    convergence_term = conv*1,
+                   scaled_convergence_term = scaled_lev_conv*1,
                    x_full = x_full,
                    x_diff = x_diff,
                    Y_diff = Y_diff,
-                   weight_decay = weight_decay )
+                   weight_decay = weight_decay,
+                   ar_constrain = ar_constrain*1)
       
       
       ## Initialize parameters conditional on the model type
@@ -320,6 +357,12 @@
           NA
         },
         
+        scaled_c = if(scaled_lev_conv==T) {
+          -2
+        } else {
+          NA
+        },
+        
         rho_global = if(ar > 0 & (ar_mod %in% c(1,3)) ) {
             rep(0, data$ar)
           } else {
@@ -366,13 +409,15 @@
       outlist[['raw_data']] <- input_data
       outlist[['data']] <- data
       outlist[['parameters']] <- parameters
-      outlist[['specifications']] <- list(yvar = yvar, xvar = xvar, c = conv, 
+      outlist[['specifications']] <- list(yvar = yvar, xvar = xvar, 
+                                          c = conv, scaled_c = scaled_lev_conv,
                                           a = global_int, z = country_int, z_ran = country_int_dist, 
                                           z_coef = ifelse(is.null(re_vars), F, min(re_vars != '' )) , 
                                           re_vars = re_vars,
                                           ar_mod = ar_mod, ma_mod = ma_mod,
                                           rho = ar, theta = ma, fd = fd,
-                                          start_year = start_year, end_fit = end_fit, end_FC = end_FC, chaos = chaos)
+                                          start_year = start_year, end_fit = end_fit, end_FC = end_FC, chaos = chaos,
+                                          ar_constrain = ar_constrain)
       return(outlist)
       
     }
@@ -478,72 +523,67 @@
       
       ## Create the ADFun
       random_vec <- NULL
-      re_input <- na.omit(c(ifelse(data_params$data$country_int>0 & data_params$data$country_int_dist>0, 'z', NA),
+      re_input <- na.omit(c(ifelse(data_params$data$country_int>0 & data_params$data$country_int_dist %in% c(0,1), 'z', NA),
                             ifelse(data_params$data$country_int>0 & data_params$data$country_int_dist==2, 'z_ar1', NA),
                             ifelse(data_params$data$re_coef>0, 'z_coef', NA),
-                            ifelse(data_params$data$ar>0 & data_params$data$ar_mod %in% c(1,3) , 'rho_global', NA),
+                            # ifelse(data_params$data$ar>0 & data_params$data$ar_mod %in% c(1,3) , 'rho_global', NA),
                             ifelse(data_params$data$ar>0 & data_params$data$ar_mod %in% c(2,3) , 'rho_country', NA), 
-                            ifelse(data_params$data$ma>0 & data_params$data$ma_mod %in% c(1,3) , 'theta_global', NA),
+                            # ifelse(data_params$data$ma>0 & data_params$data$ma_mod %in% c(1,3) , 'theta_global', NA),
                             ifelse(data_params$data$ma>0 & data_params$data$ma_mod %in% c(2,3) , 'theta_country', NA)))
       if(length(re_input) > 0) {
         random_vec <- re_input  
       }
       
+      ## Finally, find the NAs in data_params$parameters, and MAP them out
+      map_var <- names(data_params$parameters)[is.na(data_params$parameters)]
+      map_var_list <- lapply(map_var, function(x) return(factor(NA)))
+      names(map_var_list) <- map_var
       
-      #### Create the objective function as a member of output_list
-      output_list[['obj']] <- MakeADFun(data_params$data, 
-                                       data_params$parameters, 
-                                       map=NULL,
-                                       hessian = T,
-                                       DLL=model,
-                                       silent= !verbose,
-                                       random= random_vec,
-                                       checkParameterOrder = T,
-                                       last.par=T)
-      
-      ## Optimize (put this in a try block)
-      # conv = 1
-      # system.time(tryCatch(
+
         
+        #### Create the objective function as a member of output_list
+        output_list[['obj']] <- MakeADFun(data_params$data, 
+                                          data_params$parameters,  
+                                          hessian = T,
+                                          DLL=model,
+                                          silent= !verbose,
+                                          random= random_vec,
+                                          checkParameterOrder = T,
+                                          last.par=T)
+        
+        runSymbolicAnalysis(output_list[['obj']])
+        
+        ## Optimize (put this in a try block)
         output_list[['opt']] <- nlminb(objective = output_list[['obj']]$fn, 
-                                                gradient = output_list[['obj']]$gr, 
-                                                start = output_list[['obj']]$par )
+                                       gradient = output_list[['obj']]$gr, 
+                                       start = output_list[['obj']]$par )
         
+        
+        
+        ### The parameter vector in order of the joint precision can be extracted from obj:
+        output_list[["mean_params"]] <- output_list[['obj']]$env$last.par.best
         
         
         ## Get the SEs of the estimates
         output_list[['FC_model']] <- sdreport(output_list[['obj']], getJointPrecision = T, getReportCovariance=T, bias.correct = F)
         
+     
         
-        ### If our SDreport returns NaNs in the summary, then the model is garbage:
-        # if(any(is.nan(summary(output_list[['FC_model']])[,2]))) {
-        #   stop("Model reporting NaNs in SDReport")
-        # }
-        
-        # ## Look at the summary stats of the parameters estimated
-        # summary(FC_model, p.value=T)
-        # summary(FC_model, 'fixed', p.value = T)
-        # summary(FC_model, 'random', p.value = T)
-
-        
-        ### The parameter vector in order of the joint precision can be extracted from obj:
-        output_list[["mean_params"]] <- output_list[['obj']]$env$last.par.best
-        
-        ### Get the variance-covariance matrix by inverting the joint Precision
-        vcov_mat <- base::solve(output_list[['FC_model']]$jointPrecision)
-        rownames(vcov_mat) <- colnames(vcov_mat) <- colnames(output_list[['FC_model']]$jointPrecision)
-        
-        ## Assert that the name of mean_params and vcov_mat and identical (dimension matching test)
-        testthat::expect_identical(colnames(vcov_mat) , names(output_list[["mean_params"]]))
-        
-        ## Finally, record the innards of the object : Y_hat and resid
-        output_list[['Y_hat']] <-  output_list[['obj']]$report()$Y_hat
-        output_list[['resid']] <-  output_list[['obj']]$report()$resid
-        
-        # conv <<- 1
-        return(output_list)
-        
-      # }  
+      
+      ### Get the variance-covariance matrix by inverting the joint Precision
+      vcov_mat <- Matrix::solve(output_list[['FC_model']]$jointPrecision)
+      rownames(vcov_mat) <- colnames(vcov_mat) <- colnames(output_list[['FC_model']]$jointPrecision)
+      
+      ## Assert that the name of mean_params and vcov_mat and identical (dimension matching test)
+      testthat::expect_identical(colnames(vcov_mat) , names(output_list[["mean_params"]]))
+      
+      ## Finally, record the innards of the object : Y_hat and resid
+      output_list[['Y_hat']] <-  output_list[['obj']]$report()$Y_hat
+      output_list[['resid']] <-  output_list[['obj']]$report()$resid
+      
+      # conv <<- 1
+      return(output_list)
+         
       
     }
     
@@ -672,6 +712,12 @@
         pred_data[, conv := ifelse(specs$c, tmb_params[rn=='c', V1], 0)]
       }
       
+      ## Add scaled convergence term, along with the scaler
+      if (specs$scaled_c) {
+        pred_data[, scaled_conv := ifelse(specs$scaled_c, tmb_params[rn=='scaled_c', V1], 0)]
+        pred_data[, conv_scaler:= tmb_data_param$data$conv_scaler]
+      }
+      
       
       ### Random Effects ### 
       
@@ -708,6 +754,8 @@
         ## Get the AR terms (global or country specific)
         if(specs$rho >= 1) {
           
+          ## If we have constrained the AR terms, then we need to invlogit them ##
+          
           ## If country specific AR, then do this:
           if(specs$ar_mod %in% c(2,3)) {
             
@@ -719,15 +767,27 @@
             
             ## Merge on to pred_data
             pred_data <- merge(pred_data, ar_out, 'iso3', all.x=T)  
+            
+            ## invlogit on constrain
+            if(specs$ar_constrain) {
+              pred_data[, paste0('ar_country_', c(1:specs$rho)):= lapply(paste0('ar_country_', c(1:specs$rho)), 
+                                                                        function(r) invlogit(get(r)) )]
+            }
+            
           }
           
           ## If global AR, then just get the values and paste them on
           if(specs$ar_mod %in% c(1,3)) {
             pred_data[, paste0('ar_global_', c(1:specs$rho)):= lapply(c(1:specs$rho), function(r) matrix(tmb_params[rn == 'rho_global',V1])[r] )]
+            
+            ## invlogit on constrain
+            if(specs$ar_constrain) {
+              pred_data[, paste0('ar_global_', c(1:specs$rho)):= lapply(paste0('ar_global_', c(1:specs$rho)), 
+                                                                        function(r) invlogit(get(r)) )]
+            }
           }
           
-          
-          
+        
         }
       } 
       
@@ -768,7 +828,7 @@
     
     
     ## Function to forecast
-    make_forecast <- function(mean_est_data_obj, tmb_output_object, tmb_data_param, add_residual = T, ...) {
+    make_forecast <- function(mean_est_data_obj, tmb_output_object, tmb_data_param, add_residual = T, transform = NULL, ...) {
       
       # mean_est_data_obj = copy(mean_est_data)
       # tmb_output_object = copy(output_TMB)
@@ -781,6 +841,11 @@
       ## Get specifications
       specs = tmb_data_param$specifications
       
+      
+      ## If specs$scaled_c, then we gotta have a back transform:
+      if(specs$scaled_c & is.null(transform)) {
+        stop("Scaled convergence needs a back transformer")
+      }
       
       
       ## Loop over each year of forecas
@@ -827,6 +892,12 @@
         if(specs$c) {
           mean_est_data_obj[year %in% yeer, pred:= pred + conv*temp_lev, by = 'iso3']
         }
+        
+        ## Add scaled convergence term 
+        if(specs$scaled_c) {
+          mean_est_data_obj[year %in% yeer, pred:= pred + scaled_conv*get(transform)(temp_lev) / conv_scaler, by = 'iso3']
+        }
+        
         
         ## Add AR terms (global or country)
         if(specs$rho>=1) {
@@ -1008,7 +1079,7 @@
         mu <- rep(0, dim(prec)[1])
       }
       z <- matrix(MASS::mvrnorm(length(mu) * n.sims, 0, 1 ), ncol=n.sims)
-      L <- Matrix::Cholesky(prec, super = TRUE)
+      L <- Matrix::Cholesky(prec  , super = TRUE)
       z <- Matrix::solve(L, z, system = "Lt") ## z = Lt^-1 %*% z
       z <- Matrix::solve(L, z, system = "Pt") ## z = Pt    %*% z
       z <- as.matrix(z)
@@ -1113,13 +1184,16 @@
       sfa_prep <- copy(data)
       
       if(transform == "log") {
-        sfa_prep[, yoy_pc:= 100*(shift(exp(get(depvar)), type = "lead") - (exp(get(depvar))) ) / ((exp(get(depvar)))) , panelvar]       
+        sfa_prep[, yoy_pc:= 100*(shift(exp(get(depvar)), type = "lead") - (exp(get(depvar))) ) / ((exp(get(depvar)))) , panelvar]		
       } 
       if(transform == "logit") {
-        sfa_prep[, yoy_pc:= 100*(shift(arm::invlogit(get(depvar)), type = "lead") - (arm::invlogit(get(depvar)))  ) / ((arm::invlogit(get(depvar)))) , panelvar]                
+        sfa_prep[, yoy_pc:= 100*(shift(arm::invlogit(get(depvar)), type = "lead") - (arm::invlogit(get(depvar)))  ) / ((arm::invlogit(get(depvar)))) , panelvar]				
       } 
       if(transform == "logit_trans") {
-        sfa_prep[, yoy_pc:= 100*(shift(inv_logit_trans(get(depvar)), type = "lead") - (inv_logit_trans(get(depvar)))  ) / ((inv_logit_trans(get(depvar)))) , panelvar]              
+        sfa_prep[, yoy_pc:= 100*(shift(inv_logit_trans(get(depvar)), type = "lead") - (inv_logit_trans(get(depvar)))  ) / ((inv_logit_trans(get(depvar)))) , panelvar]				
+      } 
+      if(transform == "custom") {
+        sfa_prep[, yoy_pc:= 100*(shift(custom_inv_fn(get(depvar)), type = "lead") - (custom_inv_fn(get(depvar)))  ) / ((custom_inv_fn(get(depvar)))) , panelvar]				
       } 
       
       sfa_prep <- sfa_prep[yoy_pc < 100 & yoy_pc>-100  ]
@@ -1175,6 +1249,12 @@
                  geom_line(data = sfa_neg, aes(x = exp(get(depvar)), y = lower_frontier), color = 'red') +
                  geom_point(data = sfa_pos, aes(x = exp(get(depvar)), y = yoy_pc)) + geom_line(data = sfa_pos, aes(x = exp(get(depvar)), y = upper_frontier), color = 'red'))    
         }
+        
+        if(transform == 'custom') {
+          plot(ggplot2::ggplot() + geom_point(data = sfa_neg, aes(x = custom_inv_fn(get(depvar)), y = yoy_pc)) + geom_line(data = sfa_neg, aes(x = custom_inv_fn(get(depvar)), y = lower_frontier), color = 'red') +
+                 geom_point(data = sfa_pos, aes(x = custom_inv_fn(get(depvar)), y = yoy_pc)) + geom_line(data = sfa_pos, aes(x = custom_inv_fn(get(depvar)), y = upper_frontier), color = 'red'))    
+        }
+        
         
       } 
       
@@ -1613,11 +1693,18 @@
       ## FD?
       postfile_df[, fdiff:= tmb_data_param$specifications$fd]
       
+      ## AR constrain?
+      postfile_df[, ar_constrain:= tmb_data_param$specifications$ar_constrain]
+      
       ## Convergence term 
       if(tmb_data_param$specifications$c) {
         postfile_df[, conv := tmb_output_obj$obj$report()$c]
       }
       
+      ## Scaled convergence term
+      if(tmb_data_param$specifications$scaled_c) {
+        postfile_df[, scaled_c := tmb_output_obj$obj$report()$scaled_c]
+      }
       
       ## Upweights
       postfile_df[, weights := tmb_data_param$data$weight_decay ]

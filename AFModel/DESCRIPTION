@@ -1,18 +1,20 @@
 Package: AFModel
 Type: Package
-Title: Automated Forecasting functions for Panel Data using TMB
-Version: 0.1.0
+Title: Automated Forecasting functions for Balanced Data using TMB
+Version: 0.1.1
 Authors@R: person("Nafis", "Sadat", email = "sadatnfs@uw.edu",
   role = c("aut", "cre"))
 Description: Necessary functions for forecasting panel data using TMB,
     only deployable for Institute for Health Metrics and Evaluation parallel
     computing setup
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
 URL: https://github.com/sadatnfs/AFModel
 BugReports: https://github.com/sadatnfs/AFModel/issues
 NeedsCompilation: yes
 Depends: R (>= 3.4.0)
+Author: Nafis Sadat [aut]
+Maintainer: Nafis Sadat <sadatnfs@uw.edu>
 Imports:
     TMB,
     MASS,
@@ -27,4 +29,5 @@ Imports:
     ggplot2,
     arm,
     Matrix
+LinkingTo: TMB
 License: GNU

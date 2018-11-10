@@ -46,6 +46,260 @@
     
     
     
+    ###################################################
+    ## DB
+    ###################################################
+    
+    
+    ## Function to query and get entity info
+    get_entity_info <- function(variable = NA) {
+      
+      dbconn = dbConnect(MySQL(), user='readonly', password='justlooking', 
+                         dbname='forecasting', host='dex-modelingdb-d01.ihme.washington.edu')
+      
+      if(is.na(variable)) {
+        out = dbSendQuery(dbconn, paste0('select * from entity_metadata'))
+      } else {
+        out = dbSendQuery(dbconn, paste0('select * from entity_metadata where entity_name = "', variable, '"'))
+      }
+      
+      out_2 = data.table(fetch(out, n=-1))
+      on.exit(dbDisconnect(dbconn))
+      
+      return(out_2)
+      
+    }
+    
+    ## Function to query and get model info
+    get_model_info <- function(entity_id = NA) {
+      
+      dbconn = dbConnect(MySQL(), user='readonly', password='justlooking', 
+                         dbname='forecasting', host='dex-modelingdb-d01.ihme.washington.edu')
+      
+      if(is.na(entity_id)) {
+        out = dbSendQuery(dbconn, paste0('select * from model_versions '))
+      } else {
+        out = dbSendQuery(dbconn, paste0('select * from model_versions where entity = "', entity_id, '"'))
+      }
+      out_2 = data.table(fetch(out, n=-1))
+      on.exit(dbDisconnect(dbconn))
+      
+      return(out_2)
+      
+    }
+    
+    
+    
+    ## Function to query and get output info for given entity and model
+    get_oots <- function(entity_id, model_id, scenario = 0, year_id = c(1990:2040)) {
+      
+      dbconn = dbConnect(MySQL(), user='readonly', password='justlooking', 
+                         dbname='forecasting', host='dex-modelingdb-d01.ihme.washington.edu')
+      
+      out = dbSendQuery(dbconn, paste0('select * from outputs where entity = "', entity_id, '"',
+                                       ' and year_id IN (', paste0(year_id, collapse=','), ')',
+                                       ' and model_id = ', model_id,
+                                       ' and scenario IN (', paste0(scenario, collapse=','), ')'))
+      out_2 = data.table(fetch(out, n=-1))
+      on.exit(dbDisconnect(dbconn))
+      
+      return(out_2)
+      
+    }
+    
+    ## Locs
+    get_lox <- function() {
+      dbconn = dbConnect(MySQL(), user='readonly', password='justlooking', 
+                         dbname='forecasting', host='dex-modelingdb-d01.ihme.washington.edu')
+      
+      out = dbSendQuery(dbconn, paste0('select * from location_metadata'))
+      out_2 = data.table(fetch(out, n=-1))
+      on.exit(dbDisconnect(dbconn))
+      
+      return(out_2)
+      
+    }
+    
+    
+    
+    ## Prep output data with the entity and model info
+    prep_for_db_uploading <- function(root_fold, metadata_list, entity_info, model_num, custom_data = NULL, custom_draw_data_path = NULL) {
+      #' @param root_fold the model folder info which will pull in 
+      #' a data.table with the following columns: 
+      #' location_id, year_id, mean, lower, upper, scenario
+      #' usually comes from Scenario output.
+      #' If no scenario columns exist, make scenario == 0 column
+      #' @param metadata_list
+      #' @param entity_info
+      #' @param model_num
+      #' Outputs include a list with:
+      #' \itemize{
+      #'  \item \code{model_info} A dataframe to be uploaded to model_versions
+      #'  \item \code{outputs} A dataframe to be uploaded to outputs 
+      #' }
+      
+      
+      ## Get data from root_fold:
+        ## First check whether scenario data exists
+      if(is.null(custom_data)) {
+        tryCatch(
+          {
+            data <- fread(paste0(root_fold, '/summary_files/correlated_stats.csv'))
+            try(data <- fread(paste0(root_fold, '/summary_files/scenario_stats.csv')))
+          },
+          error = function(e) {
+            stop("Neither correlated nor scenario stats found")
+          }, 
+          warning = function(w) {
+            stop("No scenarios")
+          }
+        )
+      } else {
+        data <- custom_data
+      }
+      
+      ## Check whether iso3, year, mean, upper and lower are in our dataset
+      if(!any(colnames(data) %in% c('iso3', 'year', 'mean', 'upper' , 'lower'))) {
+        stop("Not all of the following columns are in the dataframe: iso3, year, mean, upper, lower")
+      }
+      
+      
+      
+      ## Add scenario column if scenario not in data
+      if(!'scenario' %in% colnames(data)) {
+        data[, scenario:= 0]
+      }
+      
+      
+      ## If location_id is not in data, we merge it on
+      if(!'location_id' %in% colnames(data)) {
+        
+        ## Get location_set
+        dbconn = dbConnect(MySQL(), user='readonly', password='justlooking', 
+                           dbname='forecasting', host='dex-modelingdb-d01.ihme.washington.edu')
+        
+        lox <- get_lox()[level == 3, .(iso3, location_id)]
+        on.exit(dbDisconnect(dbconn))
+        
+        data <- merge(data, lox, 'iso3', all.x=T) 
+      }
+      
+      ## Prep data in the format we desire
+      data_oot <- data[,.(entity = entity_info$entity, 
+                          model_id = model_num, location_id, year_id = year, mean, upper, lower, scenario)]
+      
+      
+      ## Get location of draws (depending on whether we ran scenarios or not)
+      if(is.null(custom_draw_data_path)) {
+        if(file.exists(paste0(root_fold, '/summary_files/scenario_draws.feather'))) {
+          draws <- paste0(root_fold, '/summary_files/scenario_draws.feather')
+        } else if(file.exists(paste0(root_fold, '/summary_files/correlated_draws.feather'))) {
+          draws <- paste0(root_fold, '/summary_files/correlated_draws.feather')
+        } else {
+          draws <- 'NO DRAW FILES FOUND'
+        }
+      } else {
+        draws <- custom_draw_data_path
+      }
+      
+      ## Create a data.table with the model and entity info
+      model_info <- data.table(model_id = model_num, 
+                               date = metadata_list$date,
+                               entity = entity_info$entity,
+                               comment = metadata_list$comment,
+                               comment_long = metadata_list$comment_long,
+                               draws = draws)
+      
+      list_out <- list()
+      list_out[['outputs']] <- data_oot
+      list_out[['model_info']] <- model_info
+      return(list_out)
+      
+    }
+    
+    
+    ### Uploader
+
+    upload_data_to_db <- function(upload_prepz) {
+      #' @param upload_prepz The list output from prep_for_db_uploading
+
+      ## Open connection
+      dbconn = dbConnect(MySQL(), user='rt_uploader', password='rt_uploader100',
+                         dbname='forecasting', host='dex-modelingdb-d01.ihme.washington.edu')
+
+
+      ## Make sure that we are good on the model numbering
+      model_info <- get_model_info(entity_info$entity)
+      if(nrow(model_info) == 0) {
+        model_num = 1
+      } else {
+        model_num = max(model_info$model_id)+1
+      }
+
+      if(model_num > upload_prepz$model_info$model_id) {
+        print(paste0("Model ID ", model_num, " have already been uploaded! Increment by 1"))
+        upload_prepz$model_info$model_id = upload_prepz$model_info$model_id + 1
+        upload_prepz$outputs$model_id = upload_prepz$outputs$model_id + 1
+      }
+
+      ## Upload model_info first
+      print("Uploading model info")
+      dbWriteTable(dbconn,
+                   value = upload_prepz$model_info,
+                   row.names=F,
+                   name = "model_versions", append = TRUE )
+
+      ## Upload data
+      print("Uploading data to outputs table")
+
+      ##  Save out tempfile of data
+      tmpfile <- fwrite(upload_prepz$outputs[,.(entity, model_id, location_id, year_id, mean, upper, lower, scenario)],
+                        paste0('/share/resource_tracking/temp_dump/',
+                               upload_prepz$model_info$comment, '_output_rt1.csv'))
+
+      ## Build query
+      query  <- paste0("load data infile ",
+                       " '/share/resource_tracking/temp_dump/", upload_prepz$model_info$comment, "_output_rt1.csv'",
+                       " into table forecasting.outputs ",
+                       "fields terminated by ',' ",
+                       "lines terminated by '\n' ignore 1 lines;")
+
+      # ## Save out tempfile of data csv to infile up
+      # tmpfile <- fwrite(upload_prepz$outputs[,.(entity, model_id, location_id, year_id, mean, upper, lower, scenario)],
+      #                   paste0('/ihme/code/resource_tracking/temp_dump/',
+      #                          upload_prepz$model_info$comment, '_output_rt1.csv'))
+      # 
+      # print("Build query")
+      # query  <- paste0("load data infile ",
+      #                  " '/ihme/code/resource_tracking/temp_dump/", upload_prepz$model_info$comment, "_output_rt1.csv'",
+      #                  " into table forecasting.outputs ",
+      #                  "fields terminated by ',' ",
+      #                  "lines terminated by '\n' ignore 1 lines;")
+       
+      
+      
+      print("Build query")
+      print(query)
+      
+      
+      # Submit the update query and dc
+      dbGetQuery(dbconn, query)
+
+
+      ### Use write table for now:
+      # dbWriteTable(dbconn,
+      #              value = upload_prepz$outputs[,.(entity, model_id, location_id, year_id, mean, upper, lower, scenario)],
+      #              row.names=F,
+      #              name = "outputs", append = TRUE )
+
+      on.exit(dbDisconnect(dbconn))
+
+      print("Upload completed")
+      return(0)
+
+    }
+    
+    
     
     
     ###################################################
@@ -157,7 +411,10 @@
                                      global_int = 1, 
                                      country_int = 1, 
                                      country_int_dist = 1,
-                                     fdiff = c(1), conv = c(0,1)) {
+                                     fdiff = c(1), 
+                                     conv = c(0,1),
+                                     scaled_lev_conv = c(0),
+                                     ar_constrain = 0) {
       
       
       ### Some checks to break
@@ -209,7 +466,7 @@
 
       
         ## Cycle over AR terms?
-        regMat <- duplicate_switch(data = regMat, param_name = 'ar', param_domain = c(0:ar))
+        regMat <- duplicate_switch(data = regMat, param_name = 'ar', param_domain = ar)
         
           ## Which types of AR specification are we using?
           regMat <- duplicate_switch(data = regMat, param_name = 'ar_mod', param_domain = c(0, ar_mod))
@@ -218,8 +475,19 @@
           regMat <- regMat[!(ar == 0 & ar_mod >0)]
           regMat <- regMat[!(ar != 0 & ar_mod ==0)]
           
+          
+          ## Constrain AR terms?
+          regMat <- duplicate_switch(data = regMat, param_name = 'ar_constrain', param_domain = ar_constrain)
+          
+          ## Set ar_constrain to 0 if ar == 0
+          regMat <- regMat[ar == 0, ar_constrain:= 0]
+          
+          ## Make sure there's no duplication
+          regMat <- unique(regMat)
+          
+          
         ## Cycle over MA terms?
-        regMat <- duplicate_switch(data = regMat, param_name = 'ma', param_domain = c(0:ma))
+        regMat <- duplicate_switch(data = regMat, param_name = 'ma', param_domain = ma)
         
           ## Which types of AR specification are we using?
           regMat <- duplicate_switch(data = regMat, param_name = 'ma_mod', param_domain = c(0, ma_mod))
@@ -227,6 +495,7 @@
           ## Drop if MA == 0 and ma_mod != 0, or if MA != 0 and ma_mod == 0
           regMat <- regMat[!(ma == 0 & ma_mod >0)]
           regMat <- regMat[!(ma != 0 & ma_mod ==0)]
+          
           
         ## Cycle over time weights?
         regMat <- duplicate_switch(data = regMat, param_name = 'weight_decay', param_domain = weight_decays)
@@ -251,9 +520,16 @@
         regMat <- duplicate_switch(data = regMat, param_name = 'conv', param_domain = conv)
         regMat <- regMat[!(fdiff == 0 & conv == 1)]
         
+        ## Cycle over scaled convergence term, but ONLY set T if fdiff==1
+        regMat <- duplicate_switch(data = regMat, param_name = 'scaled_lev_conv', param_domain = scaled_lev_conv)
+        regMat <- regMat[!(fdiff == 0 & scaled_lev_conv == 1)]
+        
         
         ## Finally, create yvar grid 
         regMat <- duplicate_switch(data = regMat, param_name = 'yvar', param_domain = yvar)
+        
+        ## Make sure there's no duplication
+        regMat <- unique(regMat)
         
         ## Tag model numbers
         regMat[, id:= .I]
@@ -689,7 +965,7 @@
     
     
     ### Cumsumming Chaos (or not) POST DRAWS
-    final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans, pop_data = NULL, pop_action = NULL, hack_drop_NAs = F) {
+    final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans, pop_data = NULL, pop_var = 'total_pop', pop_action = NULL, hack_drop_NAs = F) {
       
       if(chaos) {
         if(!scenario) {
@@ -734,12 +1010,12 @@
           chaos_compiles <- merge(chaos_compiles, pop_data, c('iso3', 'year'))
           
           if(pop_action == 'div') {
-            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) / total_pop ) ]
+            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) / get(pop_var) ) ]
           } else if(pop_action == 'multiply') {
-            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) * total_pop ) ]
+            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) * get(pop_var) ) ]
           }
           
-          chaos_compiles[, total_pop:=NULL]
+          chaos_compiles[, (pop_var) := NULL]
         }
         
         ## Create stats
@@ -768,12 +1044,12 @@
           chaos_compiles <- merge(chaos_compiles, pop_data, c('iso3', 'year'))
           
           if(pop_action == 'div') {
-            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) / total_pop ) ]
+            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) /  get(pop_var) ) ]
           } else if(pop_action == 'multiply') {
-            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) * total_pop ) ]
+            chaos_compiles[, paste0('draw_', c(1:N_draws)):= lapply(paste0('draw_', c(1:N_draws)), function(x) get(paste0(x)) *  get(pop_var) ) ]
           }
           
-          chaos_compiles[, total_pop:=NULL]
+          chaos_compiles[, (pop_var) := NULL]
         }
         
         ## Create stats
@@ -804,6 +1080,18 @@
     inv_logit_trans <- function(x) {
       return( ((exp(x)/(1 +exp(x))) - (0.5/1000))*(1000/999)  )
     }
+    
+    
+    ### Bounded logit transformer 
+    logit_fn <- function(y, y_min, y_max, epsilon=1e-5){
+      log((y-(y_min-epsilon))/(y_max+epsilon-y))
+    }
+    
+    antilogit_fn <- function(antiy, y_min, y_max, epsilon=1e-5){
+      (exp(antiy)*(y_max+epsilon)+y_min-epsilon)/
+        (1+exp(antiy))
+    }
+    
     
     
     ### Stat making function across draws
