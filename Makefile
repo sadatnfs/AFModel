@@ -24,4 +24,4 @@ install: $(TARBALL)
 
 
 $(PACKAGE)/src/AFModel.so: $(PACKAGE)/src/AFModel.cpp
-	cd $(PACKAGE)/src; echo "library(TMB); compile('AFModel.cpp')" | $(R) --slave
+	cd $(PACKAGE)/src; echo "library(TMB); compile('AFModel.cpp', openmp=T)" | $(R) --slave
