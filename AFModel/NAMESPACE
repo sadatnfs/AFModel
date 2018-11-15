@@ -1,8 +1,5 @@
 exportPattern("^[[:alpha:]]+")
 import(TMB)
 importFrom(compiler, cmpfun)
-importFrom(TMB, MakeADFun)
-importFrom(TMB, runSymbolicAnalysis)
-importFrom(TMB, sdreport)
 import(data.table)
 useDynLib(AFModel)
