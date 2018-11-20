@@ -460,24 +460,34 @@ create_ensemble_grid <- function(yvar,
     stop("Random coefficients MUST have a counterpart fixed effect")
   }
 
-  ## Random coefs?
-  if (!is.null(re_coef)) {
 
-    ## Create grid of xvars
-    tmp <- (rep(list(0:2), eval(length(xvar))))
+
+  ## Add fixed effects
+  if(is.null(xvar)) {
+    tmp <-  (rep(list(0), 1))
     regMat <- data.table(do.call(expand.grid, tmp))
-    colnames(regMat) <- c(xvar)
 
-    ## Drop where the non REs are equal to 2
-    for (bads in setdiff(xvar, paste0("FE_", re_coef))) {
-      regMat <- regMat[ get(bads) != 2]
-    }
   } else {
+    ## Random coefs?
+    if (!is.null(re_coef)) {
 
-    ## Create grid of xvars
-    tmp <- (rep(list(0:1), eval(length(xvar))))
-    regMat <- data.table(do.call(expand.grid, tmp))
-    colnames(regMat) <- c(xvar)
+      ## Create grid of xvars
+      tmp <- (rep(list(0:2), eval(length(xvar))))
+      regMat <- data.table(do.call(expand.grid, tmp))
+      colnames(regMat) <- c(xvar)
+
+      ## Drop where the non REs are equal to 2
+      for (bads in setdiff(xvar, paste0("FE_", re_coef))) {
+        regMat <- regMat[ get(bads) != 2]
+      }
+    } else {
+
+      ## Create grid of xvars
+      tmp <- (rep(list(0:1), eval(length(xvar))))
+      regMat <- data.table(do.call(expand.grid, tmp))
+      colnames(regMat) <- c(xvar)
+    }
+
   }
 
 
@@ -544,6 +554,11 @@ create_ensemble_grid <- function(yvar,
 
   ## Finally, create yvar grid
   regMat <- duplicate_switch(data = regMat, param_name = "yvar", param_domain = yvar)
+
+  ## Drop V1 if xvar is NULL
+  if(is.null(xvar)) {
+    regMat[, Var1:=NULL]
+  }
 
   ## Make sure there's no duplication
   regMat <- unique(regMat)
