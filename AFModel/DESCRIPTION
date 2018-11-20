@@ -14,7 +14,7 @@ BugReports: https://github.com/sadatnfs/AFModel/issues
 NeedsCompilation: yes
 Author: Nafis Sadat [aut]
 Maintainer: Nafis Sadat <sadatnfs@uw.edu>
-LinkingTo: TMB
+LinkingTo: TMB, RcppEigen
 Depends:
     MASS,
     RMySQL,
