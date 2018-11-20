@@ -15,8 +15,9 @@ NeedsCompilation: yes
 Author: Nafis Sadat [aut]
 Maintainer: Nafis Sadat <sadatnfs@uw.edu>
 LinkingTo: TMB, RcppEigen
+Suggests:
+    MASS
 Depends:
-    MASS,
     RMySQL,
     parallel,
     feather,
