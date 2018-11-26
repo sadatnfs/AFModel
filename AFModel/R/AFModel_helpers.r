@@ -137,22 +137,25 @@ get_lox <- function() {
 }
 
 
-
-## Prep output data with the entity and model info
+#' Prep output data with the entity and model info
+#'
+#' @usage prep_for_db_uploading(root_fold, metadata_list, entity_info, model_num, custom_data = NULL, custom_draw_data_path = NULL)
+#'
+#' @param root_fold the model folder info which will pull in
+#' a data.table with the following columns:
+#' location_id, year_id, mean, lower, upper, scenario
+#' usually comes from Scenario output.
+#' If no scenario columns exist, make scenario == 0 column
+#' @param metadata_list
+#' @param entity_info
+#' @param model_num
+#' Outputs include a list with:
+#' \itemize{
+#'  \item \code{model_info} A dataframe to be uploaded to model_versions
+#'  \item \code{outputs} A dataframe to be uploaded to outputs
+#' }
+#' @export
 prep_for_db_uploading <- function(root_fold, metadata_list, entity_info, model_num, custom_data = NULL, custom_draw_data_path = NULL) {
-  #' @param root_fold the model folder info which will pull in
-  #' a data.table with the following columns:
-  #' location_id, year_id, mean, lower, upper, scenario
-  #' usually comes from Scenario output.
-  #' If no scenario columns exist, make scenario == 0 column
-  #' @param metadata_list
-  #' @param entity_info
-  #' @param model_num
-  #' Outputs include a list with:
-  #' \itemize{
-  #'  \item \code{model_info} A dataframe to be uploaded to model_versions
-  #'  \item \code{outputs} A dataframe to be uploaded to outputs
-  #' }
 
 
   ## Get data from root_fold:
@@ -239,9 +242,11 @@ prep_for_db_uploading <- function(root_fold, metadata_list, entity_info, model_n
 
 
 ### Uploader
-
+#' @description Upload data to the DEX Forecasting database
+#' @param upload_prepz The list output from prep_for_db_uploading
+#'
 upload_data_to_db <- function(upload_prepz) {
-  #' @param upload_prepz The list output from prep_for_db_uploading
+
 
   ## Open connection
   dbconn <- dbConnect(MySQL(),

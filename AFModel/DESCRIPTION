@@ -32,3 +32,4 @@ Depends:
     TMB,
     data.table
 License: GNU
+RoxygenNote: 6.1.1
