@@ -1,7 +1,7 @@
 Package: AFModel
 Type: Package
 Title: Automated Forecasting functions for Balanced Data using TMB
-Version: 0.1.1
+Version: 1.0.0
 Authors@R: person("Nafis", "Sadat", email = "sadatnfs@uw.edu",
   role = c("aut", "cre"))
 Description: Necessary functions for forecasting panel data using TMB,
@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: TRUE
 URL: https://github.com/sadatnfs/AFModel
 BugReports: https://github.com/sadatnfs/AFModel/issues
-NeedsCompilation: yes
+NeedsCompilation: yesed
 Author: Nafis Sadat [aut]
 Maintainer: Nafis Sadat <sadatnfs@uw.edu>
 LinkingTo: TMB, RcppEigen
@@ -31,5 +31,5 @@ Depends:
     compiler,
     TMB,
     data.table
-License: GNU
+License: MIT + file LICENSE
 RoxygenNote: 6.1.1
