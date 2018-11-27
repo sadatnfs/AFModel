@@ -30,6 +30,5 @@ if(interactive()){
 }
 }
 \seealso{
-\code{\link[Matrix]{solve-methods}}
- \code{\link[testthat]{equality-expectations}}
+
 }

@@ -7,14 +7,14 @@
 #' @param op PARAM_DESCRIPTION, Default: c("add", "subtract", "multiply", "divide")
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname change_units_of_draws
-#' @export 
+#' @export
 change_units_of_draws <- function(draws, idvar, input_data, column, op = c("add", "subtract", "multiply", "divide")) {
   if (length(op) != 1) {
     stop("Choose one operation")

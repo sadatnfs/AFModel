@@ -1,87 +1,3 @@
-#################################################
-## Modeling functions
-#################################################
-# ## Run a simple linear model to initialize values
-# run_lm_model <- function(data_params) {
-#
-#   ## Get both level and diff Ys
-#   data_use <- data.table(melt(data_params$data$Y_diff))
-#   colnames(data_use) <- c('iso3', 'year', 'yvar')
-#
-#   data_use_levels <- data.table(melt(data_params$data$Y_input))
-#   colnames(data_use_levels) <- c('iso3', 'year', 'ylevel')
-#
-#   ## Check if FD
-#   if(data_params$specifications$fd) {
-#     if(!is.null(data_params$specifications$xvar)) {
-#       x_use <- data.table(melt(data_params$data$x_diff))
-#       colnames(x_use) <- c('covars', 'iso3', 'year', 'x')
-#       x_use <- dcast(x_use, iso3 + year ~ covars, value.var = 'x')
-#       data_use <- merge(data_use, x_use, c('iso3','year'))
-#     }
-#   } else {
-#     if(!is.null(data_params$specifications$xvar)) {
-#       x_use <- data.table(melt(data_params$data$x_input))
-#       colnames(x_use) <- c('covars', 'iso3', 'year', 'x')
-#       x_use <- dcast(x_use, iso3 + year ~ covars, value.var = 'x')
-#       data_use_levels <- merge(data_use, x_use, c('iso3','year'))
-#     }
-#
-#   }
-#
-#   data_use <- merge(data_use, data_use_levels, c('iso3', 'year'))
-#   setkeyv(data_use, c('iso3', 'year'))
-#
-#
-#   ## Conv term?
-#   if(data_params$specifications$c) {
-#     data_use[, convergence_term:= shift(ylevel), by = 'iso3']
-#     conv_form <- 'convergence_term'
-#   } else {
-#     conv_form <- NULL
-#   }
-#
-#   ## Global intercept?
-#   if(data_params$specifications$a) {
-#     data_use[, intercept:= 1]
-#     inter_form <- 'intercept'
-#   } else {
-#     inter_form <- NULL
-#   }
-#
-#   ## Prepping 'random' effects as static inputs
-#   if(data_params$specifications$z) {
-#     re_term <- 'factor(iso3)'
-#   } else {
-#     re_term <- NULL
-#   }
-#
-#   ## Random coefs
-#
-#
-#   ## Only have a single global AR term as initial values
-#   if(data_params$specifications$rho > 0) {
-#     if(data_params$specifications$fd) {
-#       data_use[, paste0('ar_', c(1:data_params$specifications$rho)):= lapply(c(1:data_params$specifications$rho), function(var) shift(yvar, n = var) ), by = 'iso3']
-#     } else {
-#       data_use[, paste0('ar_', c(1:data_params$specifications$rho)):= lapply(c(1:data_params$specifications$rho), function(var) shift(ylevel, n = var) ), by = 'iso3']
-#     }
-#     ar_form <- paste0('ar_', data_params$specifications$rho)
-#   } else {
-#     ar_form <- NULL
-#   }
-#
-#
-#   ## Fit model
-#   lm_form <- reformulate(termlabels = c(data_params$specifications$xvar, conv_form, ar_form, inter_form, re_term),
-#                          response = ifelse(data_params$specifications$fd, 'yvar', 'ylevel'),
-#                          intercept = F)
-#
-#
-#   model <- lm(data = data_use, formula = lm_form)
-#
-#
-#
 # }
 ## Run TMB model
 #' @title FUNCTION_TITLE
@@ -91,19 +7,19 @@
 #' @param verbose PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
-#'  \code{\link[Matrix]{solve-methods}}
-#'  \code{\link[testthat]{equality-expectations}}
+#' @export
 #' @rdname run_model
-#' @export 
-#' @importFrom Matrix solve
-#' @importFrom testthat expect_identical
+#' @useDynLib AFModel
+#' @seealso
+#'
+#' @import Matrix
+#' @import testthat
 run_model <- function(data_params, model, verbose = F) {
 
   # arguments <- list(...)
