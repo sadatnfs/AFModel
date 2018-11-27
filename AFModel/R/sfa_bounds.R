@@ -1,4 +1,29 @@
 ### Compute the empirically derived upper and lower bounds
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data PARAM_DESCRIPTION
+#' @param depvar PARAM_DESCRIPTION
+#' @param transform PARAM_DESCRIPTION
+#' @param panelvar PARAM_DESCRIPTION
+#' @param yearvar PARAM_DESCRIPTION, Default: 'year'
+#' @param plot PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[arm]{invlogit}}
+#'  \code{\link[frontier]{sfa}}
+#'  \code{\link[ggplot2]{ggplot}}
+#' @rdname sfa_bounds
+#' @export 
+#' @importFrom arm invlogit
+#' @importFrom frontier sfa
+#' @importFrom ggplot2 ggplot
 sfa_bounds <- function(data, depvar, transform, panelvar, yearvar = "year", plot = F) {
 
   ## Copy out and get YoY percent changes

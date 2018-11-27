@@ -2,6 +2,21 @@
 ### Ensemble Collectors
 ######################################################################
 ## Checking whether all mean models have finished running
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param root_fold PARAM_DESCRIPTION
+#' @param mean_array_grid PARAM_DESCRIPTION
+#' @param return_fail PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname mean_run_check
+#' @export 
 mean_run_check <- function(root_fold, mean_array_grid, return_fail = F) {
 
   ## Get a list of models that passed and failed

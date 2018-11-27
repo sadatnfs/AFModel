@@ -1,4 +1,19 @@
 ### Create fun summary stuff
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param tmb_output_obj PARAM_DESCRIPTION
+#' @param tmb_data_param PARAM_DESCRIPTION
+#' @param model_number PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname postfile_maker
+#' @export 
 postfile_maker <- function(tmb_output_obj, tmb_data_param, model_number) {
 
   # tmb_output_obj = copy(output_TMB)

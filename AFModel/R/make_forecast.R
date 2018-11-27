@@ -1,4 +1,22 @@
 ## Function to forecast
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mean_est_data_obj PARAM_DESCRIPTION
+#' @param tmb_output_object PARAM_DESCRIPTION
+#' @param tmb_data_param PARAM_DESCRIPTION
+#' @param add_residual PARAM_DESCRIPTION, Default: T
+#' @param transform PARAM_DESCRIPTION, Default: NULL
+#' @param ... PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname make_forecast
+#' @export 
 make_forecast <- function(mean_est_data_obj, tmb_output_object, tmb_data_param, add_residual = T, transform = NULL, ...) {
 
   # mean_est_data_obj = copy(mean_est_data)

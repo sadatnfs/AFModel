@@ -1,4 +1,21 @@
 ## Run copula for each country
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param draws_array PARAM_DESCRIPTION
+#' @param iso PARAM_DESCRIPTION
+#' @param input_corr PARAM_DESCRIPTION
+#' @param metadata_list PARAM_DESCRIPTION
+#' @param AR1 PARAM_DESCRIPTION, Default: T
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname copula_by_country
+#' @export 
 copula_by_country <- function(draws_array, iso, input_corr, metadata_list, AR1 = T) {
 
   # Create a Correlation matrix (if using AR(1))

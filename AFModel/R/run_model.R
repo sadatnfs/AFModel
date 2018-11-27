@@ -84,6 +84,26 @@
 #
 # }
 ## Run TMB model
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data_params PARAM_DESCRIPTION
+#' @param model PARAM_DESCRIPTION
+#' @param verbose PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[Matrix]{solve-methods}}
+#'  \code{\link[testthat]{equality-expectations}}
+#' @rdname run_model
+#' @export 
+#' @importFrom Matrix solve
+#' @importFrom testthat expect_identical
 run_model <- function(data_params, model, verbose = F) {
 
   # arguments <- list(...)

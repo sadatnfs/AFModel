@@ -1,4 +1,18 @@
 ## Checking whether all draw models have finished running
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param root_fold PARAM_DESCRIPTION
+#' @param array_grid PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname draw_run_check
+#' @export 
 draw_run_check <- function(root_fold, array_grid) {
 
   ## Get list of draws already there

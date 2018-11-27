@@ -1,4 +1,20 @@
 ## Checking whether all the Chaos collectors have finished
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param root_fold PARAM_DESCRIPTION
+#' @param oos_years PARAM_DESCRIPTION
+#' @param chaos PARAM_DESCRIPTION
+#' @param scenario PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname chaos_collector_check
+#' @export 
 chaos_collector_check <- function(root_fold, oos_years, chaos, scenario = F) {
 
 

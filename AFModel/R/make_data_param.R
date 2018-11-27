@@ -1,4 +1,42 @@
 ###### Make data and parameter set
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param input_data PARAM_DESCRIPTION
+#' @param yvar PARAM_DESCRIPTION
+#' @param xvar PARAM_DESCRIPTION
+#' @param REs PARAM_DESCRIPTION
+#' @param global_int PARAM_DESCRIPTION, Default: T
+#' @param country_int PARAM_DESCRIPTION, Default: T
+#' @param country_int_dist PARAM_DESCRIPTION, Default: 1
+#' @param re_vars PARAM_DESCRIPTION, Default: NULL
+#' @param ar_mod PARAM_DESCRIPTION, Default: 2
+#' @param ar PARAM_DESCRIPTION, Default: 0
+#' @param ma_mod PARAM_DESCRIPTION, Default: 2
+#' @param ma PARAM_DESCRIPTION, Default: 0
+#' @param start_year PARAM_DESCRIPTION, Default: 1970
+#' @param end_fit PARAM_DESCRIPTION, Default: 2017
+#' @param end_FC PARAM_DESCRIPTION, Default: 2040
+#' @param weight_decay PARAM_DESCRIPTION, Default: 0
+#' @param chaos PARAM_DESCRIPTION, Default: T
+#' @param fd PARAM_DESCRIPTION, Default: F
+#' @param conv PARAM_DESCRIPTION, Default: F
+#' @param scaled_lev_conv PARAM_DESCRIPTION, Default: F
+#' @param ar_constrain PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[reshape2]{cast}}
+#'  \code{\link[data.table]{melt.data.table}}
+#' @rdname make_data_param
+#' @export 
+#' @importFrom reshape2 acast
+#' @importFrom data.table melt
 make_data_param <- function(input_data,
                             yvar,
                             xvar, REs,

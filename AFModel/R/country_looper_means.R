@@ -1,6 +1,23 @@
 ##### Same funks but for means
 ## Function which takes the distro draws info and compiles all the draws (by either level of diff)
 ### NOTE: We need the very first year of level data to cumsum (hehe) from diffs
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param oos_input PARAM_DESCRIPTION
+#' @param years PARAM_DESCRIPTION
+#' @param draw_type PARAM_DESCRIPTION, Default: 'diff'
+#' @param input_rmse_data PARAM_DESCRIPTION
+#' @param means_data PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname country_looper_means
+#' @export 
 country_looper_means <- function(oos_input, years, draw_type = "diff", input_rmse_data, means_data) {
 
   ## Loop over each country

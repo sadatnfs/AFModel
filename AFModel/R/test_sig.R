@@ -2,6 +2,22 @@
 ### Testing Inclusion Criteria
 ############################################################
 ### Coefficient significance
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param tmb_output_object PARAM_DESCRIPTION
+#' @param alpha PARAM_DESCRIPTION, Default: 0.1
+#' @param intercept_test PARAM_DESCRIPTION, Default: T
+#' @param rigorous PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname test_sig
+#' @export 
 test_sig <- function(tmb_output_object, alpha = 0.1, intercept_test = T, rigorous = F) {
 
   # tmb_output_object = copy(output_TMB); alpha=0.1

@@ -1,4 +1,24 @@
 ### Percent change bounds
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data PARAM_DESCRIPTION
+#' @param depvar PARAM_DESCRIPTION
+#' @param predict_years PARAM_DESCRIPTION
+#' @param rev_trans PARAM_DESCRIPTION
+#' @param panelvar PARAM_DESCRIPTION
+#' @param yearvar PARAM_DESCRIPTION
+#' @param sfa_output PARAM_DESCRIPTION
+#' @param threshold PARAM_DESCRIPTION, Default: 0
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname test_bounds
+#' @export 
 test_bounds <- function(data, depvar, predict_years, rev_trans, panelvar, yearvar, sfa_output, threshold = 0) {
 
   ## Compute year over year percent change

@@ -1,21 +1,21 @@
-#' Prep output data with the entity and model info
-#'
-#' @usage prep_for_db_uploading(root_fold, metadata_list, entity_info, model_num, custom_data = NULL, custom_draw_data_path = NULL)
-#'
-#' @param root_fold the model folder info which will pull in
-#' a data.table with the following columns:
-#' location_id, year_id, mean, lower, upper, scenario
-#' usually comes from Scenario output.
-#' If no scenario columns exist, make scenario == 0 column
-#' @param metadata_list
-#' @param entity_info
-#' @param model_num
-#' Outputs include a list with:
-#' \itemize{
-#'  \item \code{model_info} A dataframe to be uploaded to model_versions
-#'  \item \code{outputs} A dataframe to be uploaded to outputs
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param root_fold PARAM_DESCRIPTION
+#' @param metadata_list PARAM_DESCRIPTION
+#' @param entity_info PARAM_DESCRIPTION
+#' @param model_num PARAM_DESCRIPTION
+#' @param custom_data PARAM_DESCRIPTION, Default: NULL
+#' @param custom_draw_data_path PARAM_DESCRIPTION, Default: NULL
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
 #' }
-#' @export
+#' @rdname prep_for_db_uploading
+#' @export 
 prep_for_db_uploading <- function(root_fold, metadata_list, entity_info, model_num, custom_data = NULL, custom_draw_data_path = NULL) {
 
 

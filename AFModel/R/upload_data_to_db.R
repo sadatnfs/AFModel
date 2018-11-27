@@ -1,7 +1,17 @@
 ### Uploader
-#' @description Upload data to the DEX Forecasting database
-#' @param upload_prepz The list output from prep_for_db_uploading
-#'
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param upload_prepz PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname upload_data_to_db
+#' @export 
 upload_data_to_db <- function(upload_prepz) {
 
 

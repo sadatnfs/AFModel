@@ -2,6 +2,22 @@
 ### Scenarios
 ######################################################################
 ## Create the mean scenario trajectories, based on the convergence regressions
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data PARAM_DESCRIPTION
+#' @param metadata_list PARAM_DESCRIPTION
+#' @param aroc_years PARAM_DESCRIPTION
+#' @param transform PARAM_DESCRIPTION, Default: 'log'
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname mean_scenario_model
+#' @export 
 mean_scenario_model <- function(data, metadata_list, aroc_years, transform = "log") {
 
   #### Input: a dataframe with iso3, year, and mean columns

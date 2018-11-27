@@ -2,6 +2,19 @@
 ## Prepping functions
 ################################################
 ## A nice function to argparse with variable, date and comment
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname forecast_args_parser
+#' @export 
 forecast_args_parser <- function() {
 
   ## Open the parser

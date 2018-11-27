@@ -2,6 +2,22 @@
 ## File structuring
 ###################################################
 ## Function to prep for a run (makes folder structure)
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION
+#' @param comment PARAM_DESCRIPTION
+#' @param date PARAM_DESCRIPTION, Default: gsub("-", "", Sys.Date())
+#' @param erase PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname prep_model
+#' @export 
 prep_model <- function(variable, comment, date = gsub("-", "", Sys.Date()), erase = F) {
   folder_path <- "/share/resource_tracking/forecasting/"
 

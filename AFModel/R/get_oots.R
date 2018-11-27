@@ -1,4 +1,21 @@
 ## Function to query and get output info for given entity and model
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param entity_id PARAM_DESCRIPTION
+#' @param model_id PARAM_DESCRIPTION
+#' @param scenario PARAM_DESCRIPTION, Default: 0
+#' @param year_id PARAM_DESCRIPTION, Default: c(1980:2050)
+#' @param location_id PARAM_DESCRIPTION, Default: -1
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname get_oots
+#' @export 
 get_oots <- function(entity_id, model_id, scenario = 0, year_id = c(1980:2050), location_id = -1) {
   dbconn <- dbConnect(MySQL(),
     user = "readonly", password = "justlooking",

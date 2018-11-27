@@ -1,4 +1,21 @@
 #### Propagate uncertainty in transformed space
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mean_data PARAM_DESCRIPTION
+#' @param draws_data PARAM_DESCRIPTION
+#' @param metadata_list PARAM_DESCRIPTION
+#' @param transform PARAM_DESCRIPTION, Default: 'log'
+#' @param reverse_scenario PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname scenario_uncertainty
+#' @export 
 scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform = "log", reverse_scenario = F) {
 
 
@@ -13,7 +30,7 @@ scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform
   ## Set inverse transform calls
   if (transform == "log") rev_trans <- "exp"
   if (transform == "logit") rev_trans <- "invlogit"
-  if (transform == "level") rev_trans <- function(x) x * 1
+  if (transform == "level") rev_trans <- "unity"
 
   if (any(!transform %in% c("log", "logit", "level"))) {
     stop("Transformation must be one of: log, logit, level")

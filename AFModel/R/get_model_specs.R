@@ -1,32 +1,18 @@
-#' Get model specifications from an ensemble grid
-#'
-#' @description ## This function will take in the full array grid and return a list with all the specs
-#' @usage get_model_specs(data, model, draws = F)
-#'
-#' @param data data.table, an ensemble grid of model specification, created from `create_ensemble_grid`
-#' @param model int > 0, model IF
-#' @param draws int > 0, number of draws to assign to this model
-#'
-#' @return a list with the following keys:
-#' xvar, yvar, re_coef,
-#' ar, ar_mod, ma, ma_mod, weight_decay,
-#' global_int, country_int, country_int_dist,
-#' fdiff, conv, scaled_lev_conv,
-#' draws, model, ar_constrain
-#'
-#'
-#' @examples
-#' library("data.table")
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data PARAM_DESCRIPTION
+#' @param model PARAM_DESCRIPTION
+#' @param draws PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
 #' \dontrun{
-#' # Create the ensemble grid
-#' ens_grid <- create_ensemble_grid(yvar = 'Y', xvar = c('X1', 'X2'), ar = 1)
-#'
-#' # Run function
-#' get_model_specs(ens_grid, 1)
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
 #' }
-#'
-#'
-#' @export
+#' @rdname get_model_specs
+#' @export 
 get_model_specs <- function(data, model, draws = F) {
 
   # data = copy(GDPs_full_grid)

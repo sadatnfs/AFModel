@@ -1,4 +1,25 @@
 #### OOS generator for NON CHAOS
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mean_data PARAM_DESCRIPTION
+#' @param OOS_data PARAM_DESCRIPTION
+#' @param panelvar PARAM_DESCRIPTION
+#' @param yearvar PARAM_DESCRIPTION
+#' @param depvar_dt PARAM_DESCRIPTION
+#' @param oos_start PARAM_DESCRIPTION
+#' @param in_sample_end PARAM_DESCRIPTION
+#' @param region_metrics PARAM_DESCRIPTION, Default: F
+#' @param region_data PARAM_DESCRIPTION, Default: NA
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname RMSE_generator
+#' @export 
 RMSE_generator <- function(mean_data, OOS_data, panelvar, yearvar,
                            depvar_dt, oos_start, in_sample_end,
                            region_metrics = F, region_data = NA) {

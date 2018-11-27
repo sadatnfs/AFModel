@@ -1,4 +1,20 @@
 ### Run all copula sequence
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param draws PARAM_DESCRIPTION, Default: chaos_draws
+#' @param stats PARAM_DESCRIPTION, Default: chaos_stats
+#' @param metadata_list PARAM_DESCRIPTION, Default: metadata_list
+#' @param AR1 PARAM_DESCRIPTION, Default: T
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname correlate_draws_1D
+#' @export 
 correlate_draws_1D <- function(draws = chaos_draws, stats = chaos_stats, metadata_list = metadata_list, AR1 = T) {
   print("Get correlations")
   input_corr <- get_past_corr(stats, metadata_list)

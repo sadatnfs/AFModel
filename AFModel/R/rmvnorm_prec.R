@@ -1,12 +1,23 @@
-#' Take multivariate normal draws given a mean vector and precision matrix
-#'
-#' @param mu vector of parameter means
-#' @param prec joint precision matrix
-#' @param n.sims number of draws
-#' @param ncores number of cores to thread on
-#'
-#' @return n.sims by length(mu) matrix of parameter draws
-#'
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param mu PARAM_DESCRIPTION, Default: NULL
+#' @param prec PARAM_DESCRIPTION
+#' @param n.sims PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso 
+#'  \code{\link[MASS]{mvrnorm}}
+#'  \code{\link[Matrix]{Cholesky}},\code{\link[Matrix]{solve-methods}}
+#' @rdname rmvnorm_prec
+#' @export 
+#' @importFrom MASS mvrnorm
+#' @importFrom Matrix Cholesky solve
 rmvnorm_prec <- function(mu = NULL, prec, n.sims) {
   if (is.null(mu)) {
     mu <- rep(0, dim(prec)[1])

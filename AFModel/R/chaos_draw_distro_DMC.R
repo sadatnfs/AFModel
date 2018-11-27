@@ -1,4 +1,24 @@
 ### This function will do the same as above, but uses the Double Mad Cap
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data PARAM_DESCRIPTION
+#' @param chaos_pc PARAM_DESCRIPTION, Default: 10
+#' @param iso_portion PARAM_DESCRIPTION, Default: 1
+#' @param metadata PARAM_DESCRIPTION, Default: ensemble_metadata
+#' @param region_portion PARAM_DESCRIPTION, Default: 0
+#' @param super_region_portion PARAM_DESCRIPTION, Default: 0
+#' @param global_portion PARAM_DESCRIPTION, Default: 0
+#' @param N_draws PARAM_DESCRIPTION, Default: 1000
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname chaos_draw_distro_DMC
+#' @export 
 chaos_draw_distro_DMC <- function(data, chaos_pc = 10, iso_portion = 1, metadata = ensemble_metadata,
                                   region_portion = 0, super_region_portion = 0, global_portion = 0,
                                   N_draws = 1000) {

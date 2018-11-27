@@ -1,4 +1,31 @@
 ### Create grid of covariates and specification
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param yvar PARAM_DESCRIPTION
+#' @param xvar PARAM_DESCRIPTION
+#' @param re_coef PARAM_DESCRIPTION, Default: NULL
+#' @param ar PARAM_DESCRIPTION, Default: c(0)
+#' @param ar_mod PARAM_DESCRIPTION, Default: c(2)
+#' @param ma PARAM_DESCRIPTION, Default: c(0)
+#' @param ma_mod PARAM_DESCRIPTION, Default: c(2)
+#' @param weight_decays PARAM_DESCRIPTION, Default: c(0)
+#' @param global_int PARAM_DESCRIPTION, Default: 1
+#' @param country_int PARAM_DESCRIPTION, Default: 1
+#' @param country_int_dist PARAM_DESCRIPTION, Default: 1
+#' @param fdiff PARAM_DESCRIPTION, Default: c(1)
+#' @param conv PARAM_DESCRIPTION, Default: c(0, 1)
+#' @param scaled_lev_conv PARAM_DESCRIPTION, Default: c(0)
+#' @param ar_constrain PARAM_DESCRIPTION, Default: 0
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname create_ensemble_grid
+#' @export 
 create_ensemble_grid <- function(yvar,
                                  xvar,
                                  re_coef = NULL,

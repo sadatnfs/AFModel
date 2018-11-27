@@ -1,4 +1,19 @@
 ## Creating bunch of stuff with the residuals (MAD, median, mean, SD)
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param data PARAM_DESCRIPTION
+#' @param panelvar PARAM_DESCRIPTION
+#' @param variable PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname create_stats
+#' @export 
 create_stats <- function(data, panelvar, variable) {
   data_out <- copy(data)
 

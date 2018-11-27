@@ -1,4 +1,22 @@
 ### Prepping the data for forecasting
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param tmb_obj PARAM_DESCRIPTION
+#' @param tmb_data_param PARAM_DESCRIPTION
+#' @param tmb_params PARAM_DESCRIPTION, Default: NULL
+#' @param draw_Xdata PARAM_DESCRIPTION, Default: NULL
+#' @param draw_Ydata PARAM_DESCRIPTION, Default: NULL
+#' @param verbose PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname prep_data_for_forecast
+#' @export 
 prep_data_for_forecast <- function(tmb_obj,
                                    tmb_data_param,
                                    tmb_params = NULL,

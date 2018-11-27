@@ -2,6 +2,20 @@
 ## Job stuff
 ###################################################
 ### a job holding function to keep sleeping until certain jobs are done (from Patty Liu's cluster tools)
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param job_name PARAM_DESCRIPTION
+#' @param sleeper PARAM_DESCRIPTION, Default: 10
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname job_hold
+#' @export 
 job_hold <- function(job_name, sleeper = 10) {
 
   ## Give it a sec to launch

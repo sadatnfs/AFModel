@@ -1,4 +1,26 @@
 ### Cumsumming Chaos (or not) POST DRAWS
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param root_fold PARAM_DESCRIPTION
+#' @param chaos PARAM_DESCRIPTION
+#' @param scenario PARAM_DESCRIPTION, Default: F
+#' @param oos_years PARAM_DESCRIPTION
+#' @param N_draws PARAM_DESCRIPTION
+#' @param rev_trans PARAM_DESCRIPTION
+#' @param pop_data PARAM_DESCRIPTION, Default: NULL
+#' @param pop_var PARAM_DESCRIPTION, Default: 'total_pop'
+#' @param pop_action PARAM_DESCRIPTION, Default: NULL
+#' @param hack_drop_NAs PARAM_DESCRIPTION, Default: F
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname final_cum_sum
+#' @export 
 final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans, pop_data = NULL, pop_var = "total_pop", pop_action = NULL, hack_drop_NAs = F) {
   if (chaos) {
     if (!scenario) {

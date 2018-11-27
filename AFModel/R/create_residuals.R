@@ -2,6 +2,20 @@
 ### OOS and residual functions
 ############################################################
 ## Making residuals from TMB output
+#' @title FUNCTION_TITLE
+#' @description FUNCTION_DESCRIPTION
+#' @param tmb_output_obj PARAM_DESCRIPTION
+#' @param tmb_data_param PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @rdname create_residuals
+#' @export 
 create_residuals <- function(tmb_output_obj, tmb_data_param) {
 
   # tmb_output_obj = copy(output_TMB)
