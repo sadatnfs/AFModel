@@ -12,14 +12,14 @@
 #' @param region_data PARAM_DESCRIPTION, Default: NA
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname RMSE_generator
-#' @export 
+#' @export
 RMSE_generator <- function(mean_data, OOS_data, panelvar, yearvar,
                            depvar_dt, oos_start, in_sample_end,
                            region_metrics = F, region_data = NA) {

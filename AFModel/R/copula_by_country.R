@@ -8,14 +8,14 @@
 #' @param AR1 PARAM_DESCRIPTION, Default: T
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname copula_by_country
-#' @export 
+#' @export
 copula_by_country <- function(draws_array, iso, input_corr, metadata_list, AR1 = T) {
 
   # Create a Correlation matrix (if using AR(1))

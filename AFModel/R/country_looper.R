@@ -12,14 +12,14 @@
 #' @param draws_data PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname country_looper
-#' @export 
+#' @export
 country_looper <- function(oos_input, years, draw_type = "diff", input_rmse_data, draws_data) {
 
   ## Loop over each country

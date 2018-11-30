@@ -8,14 +8,14 @@
 #' @param sleeper PARAM_DESCRIPTION, Default: 10
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname job_hold
-#' @export 
+#' @export
 job_hold <- function(job_name, sleeper = 10) {
 
   ## Give it a sec to launch

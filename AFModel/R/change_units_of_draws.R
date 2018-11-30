@@ -1,18 +1,11 @@
-#' @title FUNCTION_TITLE
-#' @description FUNCTION_DESCRIPTION
-#' @param draws PARAM_DESCRIPTION
-#' @param idvar PARAM_DESCRIPTION
-#' @param input_data PARAM_DESCRIPTION
-#' @param column PARAM_DESCRIPTION
-#' @param op PARAM_DESCRIPTION, Default: c("add", "subtract", "multiply", "divide")
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
-#' @examples
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
+#' @title Change units of draws
+#' @description Run unary operations on draws
+#' @param draws data.table with draws
+#' @param idvar variables identifying the panel (country and time for example)
+#' @param input_data data.table which has the column we'll use to do the operation with
+#' @param column column to do the operation with
+#' @param op unary operation to run, one of: c("add", "subtract", "multiply", "divide")
+#' @return a data.table with the same structure as \code{draws}, but with the operation applied
 #' @rdname change_units_of_draws
 #' @export
 change_units_of_draws <- function(draws, idvar, input_data, column, op = c("add", "subtract", "multiply", "divide")) {

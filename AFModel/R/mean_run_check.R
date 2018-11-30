@@ -9,14 +9,14 @@
 #' @param return_fail PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname mean_run_check
-#' @export 
+#' @export
 mean_run_check <- function(root_fold, mean_array_grid, return_fail = F) {
 
   ## Get a list of models that passed and failed

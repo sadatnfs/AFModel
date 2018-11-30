@@ -7,14 +7,14 @@
 #' @param variable PARAM_DESCRIPTION, Default: NA
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname get_entity_info
-#' @export 
+#' @export
 get_entity_info <- function(variable = NA) {
   dbconn <- dbConnect(MySQL(),
     user = "readonly", password = "justlooking",

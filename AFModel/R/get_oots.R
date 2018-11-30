@@ -8,21 +8,21 @@
 #' @param location_id PARAM_DESCRIPTION, Default: -1
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname get_oots
-#' @export 
+#' @export
 get_oots <- function(entity_id, model_id, scenario = 0, year_id = c(1980:2050), location_id = -1) {
   dbconn <- dbConnect(MySQL(),
     user = "readonly", password = "justlooking",
     dbname = "forecasting", host = "dex-modelingdb-d01.ihme.washington.edu"
   )
 
-  if(location_id == -1)  {
+  if (location_id == -1) {
     out <- dbSendQuery(dbconn, paste0(
       'select * from outputs where entity = "', entity_id, '"',
       " and model_id = ", model_id,

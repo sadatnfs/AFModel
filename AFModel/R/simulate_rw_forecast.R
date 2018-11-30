@@ -8,14 +8,14 @@
 #' @param var_threshold PARAM_DESCRIPTION, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname simulate_rw_forecast
-#' @export 
+#' @export
 simulate_rw_forecast <- function(tmb_output_object, tmb_data_params, var_metric = "mad", cap_variance = T, var_threshold = NULL) {
 
   # tmb_output_object = copy(output_TMB)

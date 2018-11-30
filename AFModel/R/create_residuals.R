@@ -8,14 +8,14 @@
 #' @param tmb_data_param PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname create_residuals
-#' @export 
+#' @export
 create_residuals <- function(tmb_output_obj, tmb_data_param) {
 
   # tmb_output_obj = copy(output_TMB)

@@ -6,14 +6,14 @@
 #' @param metadata_list PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname finalize_copula_draws
-#' @export 
+#' @export
 finalize_copula_draws <- function(data_draws, copula_draws, metadata_list) {
 
   ## Keep only observed past

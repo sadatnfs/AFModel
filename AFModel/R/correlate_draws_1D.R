@@ -7,14 +7,14 @@
 #' @param AR1 PARAM_DESCRIPTION, Default: T
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname correlate_draws_1D
-#' @export 
+#' @export
 correlate_draws_1D <- function(draws = chaos_draws, stats = chaos_stats, metadata_list = metadata_list, AR1 = T) {
   print("Get correlations")
   input_corr <- get_past_corr(stats, metadata_list)

@@ -2,32 +2,22 @@
 % Please edit documentation in R/rmvnorm_prec.R
 \name{rmvnorm_prec}
 \alias{rmvnorm_prec}
-\title{FUNCTION_TITLE}
+\title{Take multivariate normal draws given a mean vector and precision matrix}
 \usage{
 rmvnorm_prec(mu = NULL, prec, n.sims)
 }
 \arguments{
-\item{mu}{PARAM_DESCRIPTION, Default: NULL}
+\item{mu}{vector of parameter means}
 
-\item{prec}{PARAM_DESCRIPTION}
+\item{prec}{joint precision matrix}
 
-\item{n.sims}{PARAM_DESCRIPTION}
+\item{n.sims}{number of draws}
 }
 \value{
-OUTPUT_DESCRIPTION
+length(mu) by n.sims matrix of parameter draws
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Take multivariate normal draws given a mean vector and precision matrix
 }
 \seealso{
 \code{\link[MASS]{mvrnorm}}

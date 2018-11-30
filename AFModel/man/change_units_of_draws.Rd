@@ -2,35 +2,25 @@
 % Please edit documentation in R/change_units_of_draws.R
 \name{change_units_of_draws}
 \alias{change_units_of_draws}
-\title{FUNCTION_TITLE}
+\title{Change units of draws}
 \usage{
 change_units_of_draws(draws, idvar, input_data, column, op = c("add",
   "subtract", "multiply", "divide"))
 }
 \arguments{
-\item{draws}{PARAM_DESCRIPTION}
+\item{draws}{data.table with draws}
 
-\item{idvar}{PARAM_DESCRIPTION}
+\item{idvar}{variables identifying the panel (country and time for example)}
 
-\item{input_data}{PARAM_DESCRIPTION}
+\item{input_data}{data.table which has the column we'll use to do the operation with}
 
-\item{column}{PARAM_DESCRIPTION}
+\item{column}{column to do the operation with}
 
-\item{op}{PARAM_DESCRIPTION, Default: c("add", "subtract", "multiply", "divide")}
+\item{op}{unary operation to run, one of: c("add", "subtract", "multiply", "divide")}
 }
 \value{
-OUTPUT_DESCRIPTION
+a data.table with the same structure as \code{draws}, but with the operation applied
 }
 \description{
-FUNCTION_DESCRIPTION
-}
-\details{
-DETAILS
-}
-\examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+Run unary operations on draws
 }

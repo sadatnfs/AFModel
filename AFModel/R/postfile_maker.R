@@ -6,14 +6,14 @@
 #' @param model_number PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname postfile_maker
-#' @export 
+#' @export
 postfile_maker <- function(tmb_output_obj, tmb_data_param, model_number) {
 
   # tmb_output_obj = copy(output_TMB)
@@ -44,6 +44,9 @@ postfile_maker <- function(tmb_output_obj, tmb_data_param, model_number) {
 
   ## AR constrain?
   postfile_df[, ar_constrain := tmb_data_param$specifications$ar_constrain]
+
+  ## RE int decay?
+  postfile_df[, RE_int_decay := tmb_data_param$specifications$RE_int_decay]
 
   ## Convergence term
   if (tmb_data_param$specifications$c) {

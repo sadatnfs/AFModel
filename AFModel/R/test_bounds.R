@@ -11,14 +11,14 @@
 #' @param threshold PARAM_DESCRIPTION, Default: 0
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname test_bounds
-#' @export 
+#' @export
 test_bounds <- function(data, depvar, predict_years, rev_trans, panelvar, yearvar, sfa_output, threshold = 0) {
 
   ## Compute year over year percent change

@@ -9,18 +9,18 @@
 #' @param plot PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[arm]{invlogit}}
 #'  \code{\link[frontier]{sfa}}
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname sfa_bounds
-#' @export 
+#' @export
 #' @importFrom arm invlogit
 #' @importFrom frontier sfa
 #' @importFrom ggplot2 ggplot

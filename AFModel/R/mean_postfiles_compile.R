@@ -6,14 +6,14 @@
 #' @param mc.cores PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname mean_postfiles_compile
-#' @export 
+#' @export
 mean_postfiles_compile <- function(root_fold, passed_models, mc.cores) {
   registerDoParallel(cores = mc.cores)
 

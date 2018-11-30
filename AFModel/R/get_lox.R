@@ -4,14 +4,14 @@
 
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname get_lox
-#' @export 
+#' @export
 get_lox <- function() {
   dbconn <- dbConnect(MySQL(),
     user = "readonly", password = "justlooking",

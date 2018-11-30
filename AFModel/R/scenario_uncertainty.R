@@ -8,14 +8,14 @@
 #' @param reverse_scenario PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname scenario_uncertainty
-#' @export 
+#' @export
 scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform = "log", reverse_scenario = F) {
 
 

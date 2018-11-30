@@ -5,14 +5,14 @@
 #' @param array_grid PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname draw_run_check
-#' @export 
+#' @export
 draw_run_check <- function(root_fold, array_grid) {
 
   ## Get list of draws already there

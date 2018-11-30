@@ -3,14 +3,14 @@
 #' @param x PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname unity
-#' @export 
-  unity <- function(x) {
-    x * 1
-    }
+#' @export
+unity <- function(x) {
+  x * 1
+}

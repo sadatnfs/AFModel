@@ -7,14 +7,14 @@
 #' @param scenario PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname chaos_collector_check
-#' @export 
+#' @export
 chaos_collector_check <- function(root_fold, oos_years, chaos, scenario = F) {
 
 

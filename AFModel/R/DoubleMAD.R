@@ -4,14 +4,14 @@
 #' @param zero.mad.action PARAM_DESCRIPTION, Default: 'warn'
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname DoubleMAD
-#' @export 
+#' @export
 DoubleMAD <- function(x, zero.mad.action = "warn") {
   # The zero.mad.action determines the action in the event of an MAD of zero.
   # Possible values: "stop", "warn", "na" and "warn and na".

@@ -12,14 +12,14 @@
 #' @param coef_prior_list PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname prior_coefs_mean
-#' @export 
+#' @export
 prior_coefs_mean <- function(data, coef_prior_list) {
 
   # data = copy(data_models_passed)

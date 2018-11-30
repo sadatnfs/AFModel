@@ -24,17 +24,17 @@
 #' @param ar_constrain PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[reshape2]{cast}}
 #'  \code{\link[data.table]{melt.data.table}}
 #' @rdname make_data_param
-#' @export 
+#' @export
 #' @importFrom reshape2 acast
 #' @importFrom data.table melt
 make_data_param <- function(input_data,
@@ -51,7 +51,8 @@ make_data_param <- function(input_data,
                             fd = F,
                             conv = F,
                             scaled_lev_conv = F,
-                            ar_constrain = F) {
+                            ar_constrain = F,
+                            RE_int_decay = F) {
 
 
   ## Convergence cannot be true without first diff
@@ -86,7 +87,7 @@ make_data_param <- function(input_data,
   rownames(Y_scaled_conv) <- Y_scaled_conv_input_rows
 
   ## Strip the first entry of the convergence matrix (first time period)
-  Y_scaled_conv <- Y_scaled_conv[, 2:ncol(Y_scaled_conv)]
+  # Y_scaled_conv <- Y_scaled_conv[, 2:ncol(Y_scaled_conv)]
 
   ## Get the global scalar
   conv_scaler <- input_data$conv_scaler[1]
@@ -183,7 +184,8 @@ make_data_param <- function(input_data,
     x_diff = x_diff,
     Y_diff = Y_diff,
     weight_decay = weight_decay,
-    ar_constrain = ar_constrain * 1
+    ar_constrain = ar_constrain * 1,
+    RE_int_decay = RE_int_decay * 1
   )
 
 
@@ -302,7 +304,8 @@ make_data_param <- function(input_data,
     ar_mod = ar_mod, ma_mod = ma_mod,
     rho = ar, theta = ma, fd = fd,
     start_year = start_year, end_fit = end_fit, end_FC = end_FC, chaos = chaos,
-    ar_constrain = ar_constrain
+    ar_constrain = ar_constrain,
+    RE_int_decay = RE_int_decay
   )
   return(outlist)
 }

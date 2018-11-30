@@ -4,14 +4,14 @@
 #' @param upload_prepz PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname upload_data_to_db
-#' @export 
+#' @export
 upload_data_to_db <- function(upload_prepz) {
 
 

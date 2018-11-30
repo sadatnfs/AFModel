@@ -9,14 +9,14 @@
 #' @param ... PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname make_forecast
-#' @export 
+#' @export
 make_forecast <- function(mean_est_data_obj, tmb_output_object, tmb_data_param, add_residual = T, transform = NULL, ...) {
 
   # mean_est_data_obj = copy(mean_est_data)

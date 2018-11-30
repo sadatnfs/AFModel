@@ -7,14 +7,14 @@
 
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname forecast_args_parser
-#' @export 
+#' @export
 forecast_args_parser <- function() {
 
   ## Open the parser

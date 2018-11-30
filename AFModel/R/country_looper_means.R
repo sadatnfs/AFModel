@@ -10,14 +10,14 @@
 #' @param means_data PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname country_looper_means
-#' @export 
+#' @export
 country_looper_means <- function(oos_input, years, draw_type = "diff", input_rmse_data, means_data) {
 
   ## Loop over each country

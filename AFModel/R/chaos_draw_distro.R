@@ -11,14 +11,14 @@
 #' @param N_draws PARAM_DESCRIPTION, Default: 1000
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname chaos_draw_distro
-#' @export 
+#' @export
 chaos_draw_distro <- function(data, chaos_pc = 10, iso_portion = 1, metadata = ensemble_metadata,
                               region_portion = 0, super_region_portion = 0, global_portion = 0,
                               N_draws = 1000) {

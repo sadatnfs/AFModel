@@ -1,7 +1,7 @@
 Package: AFModel
 Type: Package
 Title: Automated Forecasting functions for Balanced Data using TMB
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: person("Nafis", "Sadat", email = "sadatnfs@uw.edu",
   role = c("aut", "cre"))
 Description: Necessary functions for forecasting panel data using TMB,

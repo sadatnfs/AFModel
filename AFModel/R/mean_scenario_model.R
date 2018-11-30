@@ -10,14 +10,14 @@
 #' @param transform PARAM_DESCRIPTION, Default: 'log'
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname mean_scenario_model
-#' @export 
+#' @export
 mean_scenario_model <- function(data, metadata_list, aroc_years, transform = "log") {
 
   #### Input: a dataframe with iso3, year, and mean columns

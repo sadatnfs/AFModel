@@ -9,14 +9,14 @@
 #' @param verbose PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname prep_data_for_forecast
-#' @export 
+#' @export
 prep_data_for_forecast <- function(tmb_obj,
                                    tmb_data_param,
                                    tmb_params = NULL,

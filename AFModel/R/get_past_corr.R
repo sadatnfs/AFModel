@@ -8,14 +8,14 @@
 #' @param metadata_list PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname get_past_corr
-#' @export 
+#' @export
 get_past_corr <- function(data_stats, metadata_list) {
   input_corr <- data_stats[
     year %in% c(eval(metadata_list$end_fit + metadata_list$oos_years):metadata_list$end_FC),

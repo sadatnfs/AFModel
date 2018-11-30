@@ -7,14 +7,14 @@
 #' @param x PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname logit_trans
-#' @export 
+#' @export
 logit_trans <- function(x) {
   return(log(((x * 999 / 1000) + (0.5 / 1000)) / (1 - ((x * 999 / 1000) + (0.5 / 1000)))))
 }

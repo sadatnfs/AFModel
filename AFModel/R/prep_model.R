@@ -10,14 +10,14 @@
 #' @param erase PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname prep_model
-#' @export 
+#' @export
 prep_model <- function(variable, comment, date = gsub("-", "", Sys.Date()), erase = F) {
   folder_path <- "/share/resource_tracking/forecasting/"
 

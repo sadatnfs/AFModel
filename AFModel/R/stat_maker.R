@@ -7,14 +7,14 @@
 #' @param idvar PARAM_DESCRIPTION, Default: c("iso3", "year")
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname stat_maker
-#' @export 
+#' @export
 stat_maker <- function(data, melt = F, merge = T, idvar = c("iso3", "year")) {
 
   ## Melt

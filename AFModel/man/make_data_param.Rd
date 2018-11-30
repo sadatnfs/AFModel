@@ -8,7 +8,8 @@ make_data_param(input_data, yvar, xvar, REs, global_int = T,
   country_int = T, country_int_dist = 1, re_vars = NULL,
   ar_mod = 2, ar = 0, ma_mod = 2, ma = 0, start_year = 1970,
   end_fit = 2017, end_FC = 2040, weight_decay = 0, chaos = T,
-  fd = F, conv = F, scaled_lev_conv = F, ar_constrain = F)
+  fd = F, conv = F, scaled_lev_conv = F, ar_constrain = F,
+  RE_int_decay = F)
 }
 \arguments{
 \item{input_data}{PARAM_DESCRIPTION}

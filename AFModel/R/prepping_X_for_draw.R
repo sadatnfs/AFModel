@@ -10,14 +10,14 @@
 #' @param d PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname prepping_X_for_draw
-#' @export 
+#' @export
 prepping_X_for_draw <- function(X_diff, X_level, tmb_data_param = data_params, d) {
   if (!is.null(tmb_data_param$specifications$xvar)) {
     if ("draw" %in% names(X_diff)) {

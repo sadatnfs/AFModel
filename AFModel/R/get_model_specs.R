@@ -5,14 +5,14 @@
 #' @param draws PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname get_model_specs
-#' @export 
+#' @export
 get_model_specs <- function(data, model, draws = F) {
 
   # data = copy(GDPs_full_grid)
@@ -114,6 +114,9 @@ get_model_specs <- function(data, model, draws = F) {
   ## AR constrain?
   ar_constrain <- array_grid[, ar_constrain]
 
+  ## RE intercept decay?
+  RE_int_decay <- array_grid[, RE_int_decay]
+
   ## Conv?
   if (draws == F) {
     conv <- array_grid[, conv]
@@ -134,6 +137,6 @@ get_model_specs <- function(data, model, draws = F) {
     ar = ar, ar_mod = ar_mod, ma = ma, ma_mod = ma_mod, weight_decay = weight_decay,
     global_int = global_int, country_int = country_int, country_int_dist = country_int_dist,
     fdiff = fdiff, conv = conv, scaled_lev_conv = scaled_lev_conv,
-    draws = draws, model = model, ar_constrain = ar_constrain
+    draws = draws, model = model, ar_constrain = ar_constrain, RE_int_decay = RE_int_decay
   ))
 }

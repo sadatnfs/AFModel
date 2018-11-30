@@ -5,16 +5,16 @@
 #' @param metadata_list PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
-#' @seealso 
+#' @seealso
 #'  \code{\link[reshape2]{cast}}
 #' @rdname prep_array_for_copula
-#' @export 
+#' @export
 #' @importFrom reshape2 acast
 prep_array_for_copula <- function(data_draws, metadata_list) {
   draws_melt <- melt(data_draws[year >= metadata_list$end_fit],

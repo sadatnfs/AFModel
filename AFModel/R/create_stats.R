@@ -6,14 +6,14 @@
 #' @param variable PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname create_stats
-#' @export 
+#' @export
 create_stats <- function(data, panelvar, variable) {
   data_out <- copy(data)
 

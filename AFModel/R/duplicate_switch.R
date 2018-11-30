@@ -9,14 +9,14 @@
 #' @param param_domain PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname duplicate_switch
-#' @export 
+#' @export
 duplicate_switch <- function(data, param_name, param_domain) {
   if (length(param_domain) > 0 & !is.null(param_domain)) {
     tmpcol <- colnames(data)

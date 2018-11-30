@@ -8,7 +8,7 @@ create_ensemble_grid(yvar, xvar, re_coef = NULL, ar = c(0),
   ar_mod = c(2), ma = c(0), ma_mod = c(2), weight_decays = c(0),
   global_int = 1, country_int = 1, country_int_dist = 1,
   fdiff = c(1), conv = c(0, 1), scaled_lev_conv = c(0),
-  ar_constrain = 0)
+  ar_constrain = 0, RE_int_decay = 0)
 }
 \arguments{
 \item{yvar}{PARAM_DESCRIPTION}
@@ -40,6 +40,8 @@ create_ensemble_grid(yvar, xvar, re_coef = NULL, ar = c(0),
 \item{scaled_lev_conv}{PARAM_DESCRIPTION, Default: c(0)}
 
 \item{ar_constrain}{PARAM_DESCRIPTION, Default: 0}
+
+\item{RE_int_decay}{PARAM_DESCRIPTION, Default: 0}
 }
 \value{
 OUTPUT_DESCRIPTION

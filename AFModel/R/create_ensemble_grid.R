@@ -16,16 +16,17 @@
 #' @param conv PARAM_DESCRIPTION, Default: c(0, 1)
 #' @param scaled_lev_conv PARAM_DESCRIPTION, Default: c(0)
 #' @param ar_constrain PARAM_DESCRIPTION, Default: 0
+#' @param RE_int_decay PARAM_DESCRIPTION, Default: 0
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname create_ensemble_grid
-#' @export 
+#' @export
 create_ensemble_grid <- function(yvar,
                                  xvar,
                                  re_coef = NULL,
@@ -38,7 +39,8 @@ create_ensemble_grid <- function(yvar,
                                  fdiff = c(1),
                                  conv = c(0, 1),
                                  scaled_lev_conv = c(0),
-                                 ar_constrain = 0) {
+                                 ar_constrain = 0,
+                                 RE_int_decay = 0) {
 
 
   ### Some checks to break
@@ -67,10 +69,9 @@ create_ensemble_grid <- function(yvar,
 
 
   ## Add fixed effects
-  if(is.null(xvar)) {
-    tmp <-  (rep(list(0), 1))
+  if (is.null(xvar)) {
+    tmp <- (rep(list(0), 1))
     regMat <- data.table(do.call(expand.grid, tmp))
-
   } else {
     ## Random coefs?
     if (!is.null(re_coef)) {
@@ -91,7 +92,6 @@ create_ensemble_grid <- function(yvar,
       regMat <- data.table(do.call(expand.grid, tmp))
       colnames(regMat) <- c(xvar)
     }
-
   }
 
 
@@ -155,13 +155,16 @@ create_ensemble_grid <- function(yvar,
   regMat <- duplicate_switch(data = regMat, param_name = "scaled_lev_conv", param_domain = scaled_lev_conv)
   regMat <- regMat[!(fdiff == 0 & scaled_lev_conv == 1)]
 
+  ## Random effect decay (only if country_int == 1)
+  regMat <- duplicate_switch(data = regMat, param_name = "RE_int_decay", param_domain = RE_int_decay)
+  regMat <- regMat[!(country_int == 0 & RE_int_decay == 1)]
 
   ## Finally, create yvar grid
   regMat <- duplicate_switch(data = regMat, param_name = "yvar", param_domain = yvar)
 
   ## Drop V1 if xvar is NULL
-  if(is.null(xvar)) {
-    regMat[, Var1:=NULL]
+  if (is.null(xvar)) {
+    regMat[, Var1 := NULL]
   }
 
   ## Make sure there's no duplication

@@ -4,14 +4,14 @@
 #' @param cor_mat PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname draw2Dcopula
-#' @export 
+#' @export
 draw2Dcopula <- function(X, cor_mat) {
   L <- dim(X)[2]
   D <- dim(X)[3]

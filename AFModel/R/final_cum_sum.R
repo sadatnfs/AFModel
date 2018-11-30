@@ -13,14 +13,14 @@
 #' @param hack_drop_NAs PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname final_cum_sum
-#' @export 
+#' @export
 final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans, pop_data = NULL, pop_var = "total_pop", pop_action = NULL, hack_drop_NAs = F) {
   if (chaos) {
     if (!scenario) {

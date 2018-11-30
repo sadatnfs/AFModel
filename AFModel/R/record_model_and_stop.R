@@ -8,14 +8,14 @@
 #' @param type PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname record_model_and_stop
-#' @export 
+#' @export
 record_model_and_stop <- function(model, variable, comment, date = gsub("-", "", Sys.Date()), type) {
   if (!(type %in% c("passed", "failed"))) {
     stop("Really?")
