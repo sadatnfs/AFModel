@@ -23,7 +23,7 @@ prep_for_db_uploading <- function(root_fold, metadata_list, entity_info, model_n
   ## First check whether scenario data exists
   if (is.null(custom_data)) {
     tryCatch({
-      data <- fread(paste0(root_fold, "/summary_files/correlated_stats.csv"))
+      try(data <- fread(paste0(root_fold, "/summary_files/correlated_stats.csv")))
       try(data <- fread(paste0(root_fold, "/summary_files/scenario_stats.csv")))
     },
     error = function(e) {
