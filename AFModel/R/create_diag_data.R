@@ -7,18 +7,18 @@
 #' @param terminal_yr PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname create_diag_data
-#' @export 
+#' @export
 create_diag_data <- function(new_model_data, baseline_model, scatter_yrs, aroc_yrs, terminal_yr) {
 
   ## Need exactly 3 in aroc_yrs
-  if(length(aroc_yrs) != 3) {
+  if (length(aroc_yrs) != 3) {
     stop("Need vector of length 3 in aroc_yrs")
   }
 

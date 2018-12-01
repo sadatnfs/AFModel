@@ -46,7 +46,7 @@ postfile_maker <- function(tmb_output_obj, tmb_data_param, model_number) {
   postfile_df[, ar_constrain := tmb_data_param$specifications$ar_constrain]
 
   ## RE int decay?
-  postfile_df[, RE_int_decay := tmb_data_param$specifications$RE_int_decay*1]
+  postfile_df[, RE_int_decay := tmb_data_param$specifications$RE_int_decay * 1]
 
   ## Convergence term
   if (tmb_data_param$specifications$c) {

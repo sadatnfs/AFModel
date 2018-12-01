@@ -3,22 +3,22 @@
 #' @param diag_data PARAM_DESCRIPTION
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
-#' @examples 
+#' @examples
 #' \dontrun{
 #' if(interactive()){
 #'  #EXAMPLE1
 #'  }
 #' }
 #' @rdname make_diag_plots
-#' @export 
+#' @export
 make_diag_plots <- function(diag_data) {
-  
+
   # (1) Overlapping plots of reference by countries with a baseline model
   # (2) Scenarios plots of new model
   # (3) Table with mean, upper and lower
   # (4) Scatter of data at specific years against baseline
   # (5) Scatter of AROC between past and future
-  
+
   ## Plots (1)
   plot1_list <- lapply(
     sort(unique(diag_data$data_merged$location_name)),
@@ -35,8 +35,8 @@ make_diag_plots <- function(diag_data) {
         theme(text = element_text(size = 16), plot.title = element_text(hjust = 0.5))
     }
   )
-  
-  
+
+
   ## Plots (2)
   diag_data$data_merged[, scenario := factor(scenario, levels = c(-1, 0, 1))]
   plot2_list <- lapply(
@@ -57,16 +57,16 @@ make_diag_plots <- function(diag_data) {
         )
     }
   )
-  
-  
+
+
   ## Table (3)
   table_out <- diag_data$data_merged[, .(Country = location_name, Scenario = scenario, Year = year, Mean = new_mean, Lower = new_lower, Upper = new_upper)]
   table_out[, Scenario := as.character(Scenario)]
   table_out[Scenario == "-1", Scenario := "Worse"]
   table_out[Scenario == "0", Scenario := "Reference"]
   table_out[Scenario == "1", Scenario := "Better"]
-  
-  
+
+
   ## Plots (4)
   ## Create a ratio of new to old
   diag_data$data_merged[, ratio_new_old := new_mean / old_mean]
@@ -85,7 +85,7 @@ make_diag_plots <- function(diag_data) {
         text = element_text(size = 16), plot.title = element_text(hjust = 0.5)
       )
   })
-  
+
   ## Plot (5)
   diag_data$aroc_data[, ratio_fut_past := get(paste0(diag_data$aroc_yrs[3])) / get(paste0(diag_data$aroc_yrs[2])) ]
   plot5 <- ggplot() +
@@ -107,17 +107,24 @@ make_diag_plots <- function(diag_data) {
     ) +
     theme_bw() +
     xlab("Past") + ylab("Future") +
-    ggtitle("AROC (percent space) of Past vs Future") +
+    ggtitle(paste0(
+      "AROC (percent space) of Past (",
+      diag_data$aroc_yrs[1], "-",
+      diag_data$aroc_yrs[2], ") vs Future (",
+      diag_data$aroc_yrs[2], "-",
+      diag_data$aroc_yrs[3], ")"
+    )) +
     theme(
       text = element_text(size = 16), plot.title = element_text(hjust = 0.5)
     )
-  
+
   ## Return all in a list
-  outlist <- list(plot1_list,
-                  plot2_list,
-                  table_out,
-                  plot4_list,
-                  plot5)
+  outlist <- list(
+    plot1_list,
+    plot2_list,
+    table_out,
+    plot4_list,
+    plot5
+  )
   return(outlist)
-  
 }

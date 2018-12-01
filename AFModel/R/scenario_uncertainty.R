@@ -35,8 +35,10 @@ scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform
   ### NOTE: We do this extra line of subset to not have data.table modify the draws inplace
   draws_data <- draws_data[, .SD, .SDcols = c("iso3", "year", paste0("draw_", c(1:metadata_list$N_draws)))]
   draws_data[, log_ref_mean := get(transform)(rowMeans(.SD)), .SDcols = paste0("draw_", c(1:metadata_list$N_draws))]
-  draws_data[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(paste0("draw_", c(1:metadata_list$N_draws)),
-                                                                     function(x) get(transform)(get(x)))]
+  draws_data[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(
+    paste0("draw_", c(1:metadata_list$N_draws)),
+    function(x) get(transform)(get(x))
+  )]
   draws_data[, paste0("dev_", c(1:metadata_list$N_draws)) := lapply(
     paste0("draw_", c(1:metadata_list$N_draws)),
     function(x) (get(paste0(x)) - log_ref_mean)
@@ -70,8 +72,10 @@ scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform
   setnames(draws_scenario, "scen", "scenario")
 
   print("Apply deviation to all draws")
-  draws_scenario[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(c(1:metadata_list$N_draws),
-                                                                         function(x) get(rev_trans)(get(paste0("dev_", x)) + log_data)) ]
+  draws_scenario[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(
+    c(1:metadata_list$N_draws),
+    function(x) get(rev_trans)(get(paste0("dev_", x)) + log_data)
+  ) ]
 
   draws_scenario <- draws_scenario[, .SD, .SDcols = c("iso3", "year", "scenario", paste0("draw_", c(1:metadata_list$N_draws)))]
 
