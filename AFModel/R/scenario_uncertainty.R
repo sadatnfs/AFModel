@@ -16,7 +16,7 @@
 #' }
 #' @rdname scenario_uncertainty
 #' @export
-scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform = "log", reverse_scenario = F) {
+scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform, rev_trans, reverse_scenario = F) {
 
 
   ## Check column requirements
@@ -27,23 +27,16 @@ scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform
     stop("Column names must have iso3, year, drawz")
   }
 
-  ## Set inverse transform calls
-  if (transform == "log") rev_trans <- "exp"
-  if (transform == "logit") rev_trans <- "invlogit"
-  if (transform == "level") rev_trans <- "unity"
 
-  if (any(!transform %in% c("log", "logit", "level"))) {
-    stop("Transformation must be one of: log, logit, level")
-  }
-
-  print("Take the draws dataset, log things, get the rowMeans and create a deviation matrix")
+  print("Take the draws dataset, transform things, get the rowMeans and create a deviation matrix")
 
   # draws_data = copy(correlated_output$draws)
 
   ### NOTE: We do this extra line of subset to not have data.table modify the draws inplace
   draws_data <- draws_data[, .SD, .SDcols = c("iso3", "year", paste0("draw_", c(1:metadata_list$N_draws)))]
-  draws_data[, log_ref_mean := log(rowMeans(.SD)), .SDcols = paste0("draw_", c(1:metadata_list$N_draws))]
-  draws_data[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(paste0("draw_", c(1:metadata_list$N_draws)), function(x) get(transform)(get(x)))]
+  draws_data[, log_ref_mean := get(transform)(rowMeans(.SD)), .SDcols = paste0("draw_", c(1:metadata_list$N_draws))]
+  draws_data[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(paste0("draw_", c(1:metadata_list$N_draws)),
+                                                                     function(x) get(transform)(get(x)))]
   draws_data[, paste0("dev_", c(1:metadata_list$N_draws)) := lapply(
     paste0("draw_", c(1:metadata_list$N_draws)),
     function(x) (get(paste0(x)) - log_ref_mean)
@@ -58,7 +51,7 @@ scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform
 
   print("Now, take the mean_data DT, melt by scenario, and merge on the deviation")
   draws_scenario <- melt(mean_data, c("iso3", "year"), variable.name = "scenario", value.name = "data")
-  draws_scenario[, log_data := log(data)]
+  draws_scenario[, log_data := get(transform)(data)]
   draws_scenario <- merge(dev_data, draws_scenario, c("iso3", "scenario", "year"), all.x = T)
 
   ## Let's encode scenarios to FBD esque style
@@ -77,7 +70,8 @@ scenario_uncertainty <- function(mean_data, draws_data, metadata_list, transform
   setnames(draws_scenario, "scen", "scenario")
 
   print("Apply deviation to all draws")
-  draws_scenario[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(c(1:metadata_list$N_draws), function(x) get(rev_trans)(get(paste0("dev_", x)) + log_data)) ]
+  draws_scenario[, paste0("draw_", c(1:metadata_list$N_draws)) := lapply(c(1:metadata_list$N_draws),
+                                                                         function(x) get(rev_trans)(get(paste0("dev_", x)) + log_data)) ]
 
   draws_scenario <- draws_scenario[, .SD, .SDcols = c("iso3", "year", "scenario", paste0("draw_", c(1:metadata_list$N_draws)))]
 

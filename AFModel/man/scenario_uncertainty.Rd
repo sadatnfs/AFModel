@@ -4,8 +4,8 @@
 \alias{scenario_uncertainty}
 \title{FUNCTION_TITLE}
 \usage{
-scenario_uncertainty(mean_data, draws_data, metadata_list,
-  transform = "log", reverse_scenario = F)
+scenario_uncertainty(mean_data, draws_data, metadata_list, transform,
+  rev_trans, reverse_scenario = F)
 }
 \arguments{
 \item{mean_data}{PARAM_DESCRIPTION}
