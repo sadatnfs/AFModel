@@ -46,7 +46,7 @@ test_sig <- function(tmb_output_object, alpha = 0.1, intercept_test = T, rigorou
 
   ## If we want to avoid any coefs
   if(!is.null(avoid_coefs)) {
-    pval_DT <- pval_DT[param %in% avoid_coefs]
+    pval_DT <- pval_DT[!(param %in% avoid_coefs)]
   }
 
   ## Create criteria column
