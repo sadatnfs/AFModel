@@ -20,7 +20,7 @@ arima_forecast <- function(data,  order = c(1,0,0), start, end_data, end_forecas
                      include.drift = T)
 
   ## Forecast to 2100
-  forecast_model <- forecast(ar1_model, h = eval(end_forecast - start))
+  forecast_model <- forecast(ar1_model, h = eval(end_forecast - end_data))
 
   ## Return vector
   return(c(as.vector(ts_data), as.vector(forecast_model$mean) ))

@@ -8,6 +8,7 @@
 #' @param alpha PARAM_DESCRIPTION, Default: 0.1
 #' @param intercept_test PARAM_DESCRIPTION, Default: T
 #' @param rigorous PARAM_DESCRIPTION, Default: F
+#' @param avoid_coefs PARAM_DESCRIPTION, Default: NULL
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -18,7 +19,7 @@
 #' }
 #' @rdname test_sig
 #' @export
-test_sig <- function(tmb_output_object, alpha = 0.1, intercept_test = T, rigorous = F) {
+test_sig <- function(tmb_output_object, alpha = 0.1, intercept_test = T, rigorous = F, avoid_coefs = NULL) {
 
   # tmb_output_object = copy(output_TMB); alpha=0.1
 
@@ -35,13 +36,18 @@ test_sig <- function(tmb_output_object, alpha = 0.1, intercept_test = T, rigorou
   #### BUT: If we are doing rigorous tests, then we should test everything except the country random effect estimates
   if (!rigorous) {
     pval_DT <- pval_DT[param %in% c(
-      "b", "a", "logSigma", "logggroup", "loggrcoef", "c", "rho_global",
+      "b", "a", "logSigma", "logggroup", "loggrcoef", "c", "scaled_c", "rho_global",
       "logSigma_rho_country", "theta_global", "var_theta_global", "var_theta_country"
     )]
   } else {
     pval_DT <- pval_DT[!(param %in% c("z", "z_coef"))]
   }
 
+
+  ## If we want to avoid any coefs
+  if(!is.null(avoid_coefs)) {
+    pval_DT <- pval_DT[param %in% avoid_coefs]
+  }
 
   ## Create criteria column
   pval_DT[, pass_sig_test := pval < 0.1 ]

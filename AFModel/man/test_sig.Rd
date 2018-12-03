@@ -5,7 +5,7 @@
 \title{FUNCTION_TITLE}
 \usage{
 test_sig(tmb_output_object, alpha = 0.1, intercept_test = T,
-  rigorous = F)
+  rigorous = F, avoid_coefs = NULL)
 }
 \arguments{
 \item{tmb_output_object}{PARAM_DESCRIPTION}
@@ -15,6 +15,8 @@ test_sig(tmb_output_object, alpha = 0.1, intercept_test = T,
 \item{intercept_test}{PARAM_DESCRIPTION, Default: T}
 
 \item{rigorous}{PARAM_DESCRIPTION, Default: F}
+
+\item{avoid_coefs}{PARAM_DESCRIPTION, Default: NULL}
 }
 \value{
 OUTPUT_DESCRIPTION
