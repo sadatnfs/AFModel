@@ -6,7 +6,7 @@
 \usage{
 final_cum_sum(root_fold, chaos, scenario = F, oos_years, N_draws,
   rev_trans, pop_data = NULL, pop_var = "total_pop",
-  pop_action = NULL, hack_drop_NAs = F)
+  pop_action = NULL, hack_drop_NAs = F, hack_zero_bads = F)
 }
 \arguments{
 \item{root_fold}{PARAM_DESCRIPTION}
@@ -28,6 +28,8 @@ final_cum_sum(root_fold, chaos, scenario = F, oos_years, N_draws,
 \item{pop_action}{PARAM_DESCRIPTION, Default: NULL}
 
 \item{hack_drop_NAs}{PARAM_DESCRIPTION, Default: F}
+
+\item{hack_zero_bads}{PARAM_DESCRIPTION, Default: F}
 }
 \value{
 OUTPUT_DESCRIPTION

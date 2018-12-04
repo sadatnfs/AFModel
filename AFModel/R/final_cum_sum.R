@@ -11,6 +11,7 @@
 #' @param pop_var PARAM_DESCRIPTION, Default: 'total_pop'
 #' @param pop_action PARAM_DESCRIPTION, Default: NULL
 #' @param hack_drop_NAs PARAM_DESCRIPTION, Default: F
+#' @param hack_zero_bads PARAM_DESCRIPTION, Default: F
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -21,7 +22,7 @@
 #' }
 #' @rdname final_cum_sum
 #' @export
-final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans, pop_data = NULL, pop_var = "total_pop", pop_action = NULL, hack_drop_NAs = F) {
+final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans, pop_data = NULL, pop_var = "total_pop", pop_action = NULL, hack_drop_NAs = F, hack_zero_bads = F) {
   if (chaos) {
     if (!scenario) {
       print("Bring all the Chaos compiles into memory")
@@ -105,10 +106,12 @@ final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, re
     ## Create stats
     if (hack_drop_NAs) {
       chaos_compiles <- chaos_compiles[!is.na(draw_1)]
-      chaos_stats <- stat_maker(data = chaos_compiles, idvar = c("iso3", "scenario", "year"), melt = T, merge = F)
-    } else {
-      chaos_stats <- stat_maker(data = chaos_compiles, idvar = c("iso3", "scenario", "year"), melt = T, merge = F)
     }
+    if (hack_zero_bads) {
+      chaos_compiles[is.na(chaos_compiles)] <- 0
+      chaos_compiles[is.nan(chaos_compiles)] <- 0
+    }
+    chaos_stats <- stat_maker(data = chaos_compiles, idvar = c("iso3", "scenario", "year"), melt = T, merge = F)
   }
 
   return(list(draws = chaos_compiles, stats = chaos_stats))
