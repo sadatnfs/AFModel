@@ -27,7 +27,7 @@ chaos_collector_check <- function(root_fold, oos_years, chaos, scenario = F) {
   }
 
   ## Keep only Chaos rds
-  list_of_chaos <- list_of_chaos[grep("chaos", list_of_chaos)]
+  list_of_chaos <- list_of_chaos[grep("^chaos", list_of_chaos)]
 
   if (chaos) {
     if (length(list_of_chaos) == oos_years) {
