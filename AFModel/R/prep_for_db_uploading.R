@@ -59,7 +59,7 @@ prep_for_db_uploading <- function(root_fold, metadata_list, entity_info, model_n
       dbname = "forecasting", host = "dex-modelingdb-d01.ihme.washington.edu"
     )
 
-    lox <- get_lox()[level == 3, .(iso3, location_id)]
+    lox <- get_lox()[level <= 3, .(iso3, location_id)]
     on.exit(dbDisconnect(dbconn))
 
     data <- merge(data, lox, "iso3", all.x = T)
