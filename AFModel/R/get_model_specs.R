@@ -115,7 +115,7 @@ get_model_specs <- function(data, model, draws = F) {
   ar_constrain <- array_grid[, ar_constrain]
 
   ## RE intercept decay?
-  RE_int_decay <- array_grid[, RE_int_decay]
+  int_decay <- array_grid[, int_decay]
 
   ## Conv?
   if (draws == F) {
@@ -137,6 +137,6 @@ get_model_specs <- function(data, model, draws = F) {
     ar = ar, ar_mod = ar_mod, ma = ma, ma_mod = ma_mod, weight_decay = weight_decay,
     global_int = global_int, country_int = country_int, country_int_dist = country_int_dist,
     fdiff = fdiff, conv = conv, scaled_lev_conv = scaled_lev_conv,
-    draws = draws, model = model, ar_constrain = ar_constrain, RE_int_decay = RE_int_decay
+    draws = draws, model = model, ar_constrain = ar_constrain, int_decay = int_decay
   ))
 }

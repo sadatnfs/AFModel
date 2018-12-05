@@ -52,7 +52,7 @@ make_data_param <- function(input_data,
                             conv = F,
                             scaled_lev_conv = F,
                             ar_constrain = F,
-                            RE_int_decay = F) {
+                            int_decay = F) {
 
 
   ## Convergence cannot be true without first diff
@@ -185,7 +185,7 @@ make_data_param <- function(input_data,
     Y_diff = Y_diff,
     weight_decay = weight_decay,
     ar_constrain = ar_constrain * 1,
-    RE_int_decay = RE_int_decay * 1
+    int_decay = int_decay * 1
   )
 
 
@@ -305,7 +305,7 @@ make_data_param <- function(input_data,
     rho = ar, theta = ma, fd = fd,
     start_year = start_year, end_fit = end_fit, end_FC = end_FC, chaos = chaos,
     ar_constrain = ar_constrain,
-    RE_int_decay = RE_int_decay
+    int_decay = int_decay
   )
   return(outlist)
 }

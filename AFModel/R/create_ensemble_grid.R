@@ -16,7 +16,7 @@
 #' @param conv PARAM_DESCRIPTION, Default: c(0, 1)
 #' @param scaled_lev_conv PARAM_DESCRIPTION, Default: c(0)
 #' @param ar_constrain PARAM_DESCRIPTION, Default: 0
-#' @param RE_int_decay PARAM_DESCRIPTION, Default: 0
+#' @param int_decay PARAM_DESCRIPTION, Default: 0
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -40,7 +40,7 @@ create_ensemble_grid <- function(yvar,
                                  conv = c(0, 1),
                                  scaled_lev_conv = c(0),
                                  ar_constrain = 0,
-                                 RE_int_decay = 0) {
+                                 int_decay = 0) {
 
 
   ### Some checks to break
@@ -156,8 +156,8 @@ create_ensemble_grid <- function(yvar,
   regMat <- regMat[!(fdiff == 0 & scaled_lev_conv == 1)]
 
   ## Random effect decay (only if country_int == 1)
-  regMat <- duplicate_switch(data = regMat, param_name = "RE_int_decay", param_domain = RE_int_decay)
-  regMat <- regMat[!(country_int == 0 & RE_int_decay == 1)]
+  regMat <- duplicate_switch(data = regMat, param_name = "int_decay", param_domain = int_decay)
+  regMat <- regMat[!(country_int == 0 & int_decay == 1)]
 
   ## Finally, create yvar grid
   regMat <- duplicate_switch(data = regMat, param_name = "yvar", param_domain = yvar)
