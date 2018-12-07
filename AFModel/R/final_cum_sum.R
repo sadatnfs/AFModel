@@ -22,7 +22,7 @@
 #' }
 #' @rdname final_cum_sum
 #' @export
-final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans, pop_data = NULL, pop_var = "total_pop", pop_action = NULL, hack_drop_NAs = F, hack_zero_bads = F) {
+final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, rev_trans = NULL, pop_data = NULL, pop_var = "total_pop", pop_action = NULL, hack_drop_NAs = F, hack_zero_bads = F) {
   if (chaos) {
     if (!scenario) {
       print("Bring all the Chaos compiles into memory")
@@ -53,8 +53,10 @@ final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, re
     chaos_compiles[, paste0("draw_", c(1:N_draws)) := lapply(paste0("draw_", c(1:N_draws)), function(x) cumsum(get(paste0(x)))), by = c("iso3")]
 
 
-    ## Reserve transform; rev_trans = 'exp'
-    chaos_compiles[, paste0("draw_", c(1:N_draws)) := lapply(paste0("draw_", c(1:N_draws)), function(x) get(rev_trans)(get(paste0(x)))) ]
+    ## Reserve transform
+    if(!is.null(rev_trans)) {
+      chaos_compiles[, paste0("draw_", c(1:N_draws)) := lapply(paste0("draw_", c(1:N_draws)), function(x) get(rev_trans)(get(paste0(x)))) ]
+    }
 
 
     if (!is.null(pop_data)) {
