@@ -46,7 +46,7 @@ create_diag_data <- function(new_model_data, baseline_model, scatter_yrs, aroc_y
   aroc_data <- data_merged[year %in% aroc_yrs]
   aroc_data[, aroc_new_mean := 100 * ((new_mean / shift(new_mean))**(1 / (year - shift(year))) - 1), by = c("iso3", "scenario")]
   aroc_data <- aroc_data[!is.na(aroc_new_mean), .(location_name, iso3, scenario, year, aroc_new_mean)]
-  aroc_data <- dcast(aroc_data, iso3 + location_name + scenario ~ year, value.var = "aroc_new_mean")
+  aroc_data <- data.table(dcast(aroc_data, iso3 + location_name + scenario ~ year, value.var = "aroc_new_mean"))
 
   return(list(
     data_merged = data_merged,

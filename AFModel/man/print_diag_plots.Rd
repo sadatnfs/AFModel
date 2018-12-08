@@ -4,12 +4,14 @@
 \alias{print_diag_plots}
 \title{FUNCTION_TITLE}
 \usage{
-print_diag_plots(diag_plots, root_fold)
+print_diag_plots(diag_plots, root_fold, out_specs = c(1, 2, 3, 4, 5))
 }
 \arguments{
 \item{diag_plots}{PARAM_DESCRIPTION}
 
 \item{root_fold}{PARAM_DESCRIPTION}
+
+\item{out_specs}{choices of which diagnostics to make (see Details), Default: c(1,2,3,4,5)}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -18,7 +20,12 @@ OUTPUT_DESCRIPTION
 FUNCTION_DESCRIPTION
 }
 \details{
-DETAILS
+Create the following diagnostic plots and tables:
+  (1) Overlapping plots of reference by countries with a baseline model
+  (2) Scenarios plots of new model
+  (3) Table with mean, upper and lower
+  (4) Scatter of data at specific years against baseline
+  (5) Scatter of AROC between past and future
 }
 \examples{
 \dontrun{

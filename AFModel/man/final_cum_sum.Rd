@@ -5,7 +5,7 @@
 \title{FUNCTION_TITLE}
 \usage{
 final_cum_sum(root_fold, chaos, scenario = F, oos_years, N_draws,
-  rev_trans, pop_data = NULL, pop_var = "total_pop",
+  rev_trans = NULL, pop_data = NULL, pop_var = "total_pop",
   pop_action = NULL, hack_drop_NAs = F, hack_zero_bads = F)
 }
 \arguments{
