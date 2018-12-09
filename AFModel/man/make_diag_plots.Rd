@@ -4,12 +4,15 @@
 \alias{make_diag_plots}
 \title{FUNCTION_TITLE}
 \usage{
-make_diag_plots(diag_data, out_specs = c(1, 2, 3, 4, 5))
+make_diag_plots(diag_data, out_specs = c(1, 2, 3, 4, 5),
+  scenarios_in_table = c(0, -1, 1))
 }
 \arguments{
 \item{diag_data}{PARAM_DESCRIPTION}
 
 \item{out_specs}{choices of which diagnostics to make (see Details), Default: c(1,2,3,4,5)}
+
+\item{scenarios_in_table}{which scenarios for table to output. Default: c(0,-1,1)}
 }
 \value{
 OUTPUT_DESCRIPTION

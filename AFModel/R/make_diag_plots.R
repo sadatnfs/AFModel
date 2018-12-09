@@ -2,6 +2,7 @@
 #' @description FUNCTION_DESCRIPTION
 #' @param diag_data PARAM_DESCRIPTION
 #' @param out_specs choices of which diagnostics to make (see Details), Default: c(1,2,3,4,5)
+#' @param scenarios_in_table which scenarios for table to output. Default: c(0,-1,1)
 #' @return OUTPUT_DESCRIPTION
 #' @details Create the following diagnostic plots and tables:
 #'   (1) Overlapping plots of reference by countries with a baseline model
@@ -17,7 +18,7 @@
 #' }
 #' @rdname make_diag_plots
 #' @export
-make_diag_plots <- function(diag_data, out_specs = c(1, 2, 3, 4, 5)) {
+make_diag_plots <- function(diag_data, out_specs = c(1, 2, 3, 4, 5), scenarios_in_table = c(0, -1, 1)) {
 
 
   ### Initialize the output objects
@@ -73,11 +74,14 @@ make_diag_plots <- function(diag_data, out_specs = c(1, 2, 3, 4, 5)) {
 
   ## Table (3)
   if (3 %in% out_specs) {
-    table_out <- diag_data$data_merged[, .(location_id, iso3,
-      Country = location_name,
-      Scenario = scenario, Year = year,
-      Mean = new_mean, Lower = new_lower, Upper = new_upper
-    )]
+    table_out <- diag_data$data_merged[
+      scenario %in% scenarios_in_table,
+      .(location_id, iso3,
+        Country = location_name,
+        Scenario = scenario, Year = year,
+        Mean = new_mean, Lower = new_lower, Upper = new_upper
+      )
+    ]
     table_out[, Scenario := as.character(Scenario)]
     table_out[Scenario == "-1", Scenario := "Worse"]
     table_out[Scenario == "0", Scenario := "Reference"]
