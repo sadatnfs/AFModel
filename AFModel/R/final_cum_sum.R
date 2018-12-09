@@ -54,7 +54,7 @@ final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, re
 
 
     ## Reserve transform
-    if(!is.null(rev_trans)) {
+    if (!is.null(rev_trans)) {
       chaos_compiles[, paste0("draw_", c(1:N_draws)) := lapply(paste0("draw_", c(1:N_draws)), function(x) get(rev_trans)(get(paste0(x)))) ]
     }
 
@@ -82,8 +82,6 @@ final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, re
     }
 
     chaos_stats <- stat_maker(data = chaos_compiles, melt = T, merge = F)
-
-
   } else {
 
     ## Set iso3 and year index
@@ -119,8 +117,6 @@ final_cum_sum <- function(root_fold, chaos, scenario = F, oos_years, N_draws, re
       chaos_compiles <- replace(chaos_compiles, is.na(chaos_compiles), 0)
     }
     chaos_stats <- stat_maker(data = chaos_compiles, idvar = c("iso3", "scenario", "year"), melt = T, merge = F)
-
-
   }
 
 

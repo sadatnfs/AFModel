@@ -73,7 +73,11 @@ make_diag_plots <- function(diag_data, out_specs = c(1, 2, 3, 4, 5)) {
 
   ## Table (3)
   if (3 %in% out_specs) {
-    table_out <- diag_data$data_merged[, .(Country = location_name, Scenario = scenario, Year = year, Mean = new_mean, Lower = new_lower, Upper = new_upper)]
+    table_out <- diag_data$data_merged[, .(location_id, iso3,
+      Country = location_name,
+      Scenario = scenario, Year = year,
+      Mean = new_mean, Lower = new_lower, Upper = new_upper
+    )]
     table_out[, Scenario := as.character(Scenario)]
     table_out[Scenario == "-1", Scenario := "Worse"]
     table_out[Scenario == "0", Scenario := "Reference"]
