@@ -2,32 +2,36 @@
 % Please edit documentation in R/stat_maker.R
 \name{stat_maker}
 \alias{stat_maker}
-\title{FUNCTION_TITLE}
+\title{Stat maker}
 \usage{
 stat_maker(data, melt = F, merge = T, idvar = c("iso3", "year"))
 }
 \arguments{
-\item{data}{PARAM_DESCRIPTION}
+\item{data}{a \code{data.table} with draws}
 
-\item{melt}{PARAM_DESCRIPTION, Default: F}
+\item{melt}{melt the data long if the draws are wide , Default: F}
 
-\item{merge}{PARAM_DESCRIPTION, Default: T}
+\item{merge}{merge the statistics with the draws dataframe?, Default: T}
 
-\item{idvar}{PARAM_DESCRIPTION, Default: c("iso3", "year")}
+\item{idvar}{unique identifier, Default: c("iso3", "year")}
 }
 \value{
-OUTPUT_DESCRIPTION
+a dataset with the unique identifier, mean and 2.5th and 97.5th quantiles, and optionally, the set of draws merged on if \code{merge} is \code{TRUE}
 }
 \description{
-FUNCTION_DESCRIPTION
+Create row-wise uncertainty intervals from a set of simulated columns of data
 }
 \details{
-DETAILS
+If \code{data} has already been melted long, then the column with the data and draw names \code{MUST} be respectively named \code{data} and \code{draws}
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+ # Simulate data IDs
+sim_data <- data.table(expand.grid(a = c(1:10), b = LETTERS[1:5]))
+# Simulate data columns
+n_cols <- 10
+sim_data[, paste0('draw_', c(1:n_cols)):= lapply(paste0('draw_', c(1:n_cols)), function(x) rnorm(.N, 1, 1))]
+# Use stat maker
+sim_stats <- stat_maker(data = sim_data, melt = T, merge = F, idvar = c('a', 'b'))
 }
 }
