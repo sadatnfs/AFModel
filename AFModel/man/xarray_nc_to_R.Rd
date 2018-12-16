@@ -5,7 +5,7 @@
 \title{Get data from Xarray NetCDF file}
 \usage{
 xarray_nc_to_R(nc_file, dimname = NULL, start = NA, count = NA,
-  df_return = T)
+  dt_return = T)
 }
 \arguments{
 \item{nc_file}{Path to Xarray NetCDF file}
@@ -16,7 +16,7 @@ xarray_nc_to_R(nc_file, dimname = NULL, start = NA, count = NA,
 
 \item{count}{Number of indices, Default: NA}
 
-\item{df_return}{returns a long \code{data.table} instead of a multidimensional array, Default: T}
+\item{dt_return}{returns a long \code{data.table} instead of a multidimensional array, Default: T}
 }
 \value{
 array or data.table

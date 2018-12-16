@@ -4,7 +4,7 @@
 #' @param dimname Get the specified data column from the xarray. If set to \code{NULL}, then the names are grabbed from the xarray directly in this function
 #' @param start Start point of indices, Default: NA
 #' @param count Number of indices, Default: NA
-#' @param df_return returns a long \code{data.table} instead of a multidimensional array, Default: T
+#' @param dt_return returns a long \code{data.table} instead of a multidimensional array, Default: T
 #' @return array or data.table
 #' @examples
 #' \dontrun{
@@ -17,7 +17,7 @@
 #' @rdname xarray_nc_to_R
 #' @export
 #' @importFrom ncdf4.helpers nc.get.dim.names
-xarray_nc_to_R <- function(nc_file, dimname = NULL, start = NA, count = NA, df_return = T) {
+xarray_nc_to_R <- function(nc_file, dimname = NULL, start = NA, count = NA, dt_return = T) {
 
   ## Open the file and show the attribuets
   ncin <- nc_open(nc_file)
