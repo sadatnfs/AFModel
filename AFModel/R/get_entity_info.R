@@ -1,6 +1,3 @@
-###################################################
-## DB
-###################################################
 ## Function to query and get entity info
 #' @title FUNCTION_TITLE
 #' @description FUNCTION_DESCRIPTION

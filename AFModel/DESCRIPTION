@@ -1,7 +1,7 @@
 Package: AFModel
 Type: Package
 Title: Automated Forecasting functions for Balanced Data using TMB
-Version: 1.0.9
+Version: 1.1.0
 Authors@R: person("Nafis", "Sadat", email = "sadatnfs@uw.edu",
   role = c("aut", "cre"))
 Description: Necessary functions for forecasting panel data using TMB,
@@ -33,6 +33,8 @@ Depends:
     frontier,
     compiler,
     TMB,
+    ncdf4,
+    ncdf4.helpers,
     data.table
 License: MIT + file LICENSE
 RoxygenNote: 6.1.1
