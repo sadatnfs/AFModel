@@ -3,8 +3,7 @@
 
 ################################################
 #### Author: Nafis Sadat
-#### Purpose: Running an ARIMA model across countries in TMB
-#### Created: 2017/02/12
+#### Purpose: Running a single sub-model for mean estimation
 ################################################
 
 
@@ -53,31 +52,32 @@ print(model_info)
 ## (2) Prep all data with covariates
 ################################################
 
+
 ## Bring in full data
-input_data <- data.table(read.csv(paste0("/share/resource_tracking/forecasting/", variable, "/input_data/RT_2018_GDP_use.csv")))[year <= metadata_list$end_FC]
+input_data <- data.table(read.csv(
+  paste0("/share/resource_tracking/forecasting/", variable, "/input_data/RT_2018_use.csv")
+))[year <= metadata_list$end_FC]
 input_data <- copy(input_data)
 
 
 ## Keep only the columns we need
-# input_data <- input_data[,.SD, .SDcols = c('iso3', 'year', depvar, covars)]
 input_data <- input_data[year >= eval(metadata_list$start_year - 1)]
 input_data[, year_id := as.numeric(year) - min(year)  ]
 
-## Years of OOS
-# oos_years = 10
 
-## Create scaled maxxer for convergence
+
+## Create scaled max value for custom convergence term
 input_data[, conv_scaler := max(get(gsub("ln\\_|logit\\_", "", model_info$yvar)), na.rm = T)]
 input_data[, Y_scaled_conv := shift(get(gsub("ln\\_|logit\\_", "", model_info$yvar)) / conv_scaler), by = "iso3"]
 
+input_data_bk <- copy(input_data)
+
+
 
 ################################################
-## (3) Prepping for TMB
+## (3) Prep the list of data and parameters
 ################################################
 
-## Test and break convergence
-# input_data$ln_pop = .2
-# input_data$logit_pop15 = -.1
 
 data_params <- make_data_param(
   input_data = input_data,
@@ -98,7 +98,8 @@ data_params <- make_data_param(
   end_fit = metadata_list$end_fit,
   end_FC = metadata_list$end_FC,
   chaos = metadata_list$chaos,
-  ar_constrain = model_info$ar_constrain
+  ar_constrain = model_info$ar_constrain,
+  int_decay = model_info$int_decay
 )
 
 
@@ -110,18 +111,16 @@ data_params <- make_data_param(
 
 
 ################################################
-## (3.1) Compile, optimize and fit
+## (3.1) Optimize and fit
 ################################################
 
 ## Run the TMB model
-
 system.time(tryCatch(output_TMB <- run_model(
   data_params = data_params,
   model = "AFModel",
   verbose = T
 ),
 error = function(e) {
-  # print(e)
   print(paste0("Model couldn't be run: ", e))
   record_model_and_stop(model, variable = "gdp", comment, date, type = "failed")
 }
@@ -143,17 +142,22 @@ if (output_TMB$opt$convergence == 1 | output_TMB$FC_model$pdHess == F | any(is.n
 
 
 ### Make a dataset for mean estimation data
-mean_est_data <- prep_data_for_forecast(tmb_obj = output_TMB$obj, tmb_data_param = data_params)
+mean_est_data <- prep_data_for_forecast(
+  tmb_obj = output_TMB$obj, 
+  tmb_data_param = data_params
+)
 
-### Forecast
-mean_forecast <- make_forecast(mean_est_data_obj = mean_est_data, 
-                               tmb_output_object = output_TMB, 
-                               tmb_data_param = data_params, 
-                               add_residual = F, transform = "exp")
+### Forecast and transform to level space
+mean_forecast <- make_forecast(
+  mean_est_data_obj = mean_est_data,
+  tmb_output_object = output_TMB,
+  tmb_data_param = data_params,
+  add_residual = F, 
+  transform = metadata_list$inv_transform
+)
 
 print("Mean forecast predicted")
 
-# i='USA'; plot(mean_forecast[iso3==i, .(year, yvar)], type = 'l', col='red');
 
 ################################################
 ## (3.3) Exclusion criteria test block
@@ -164,21 +168,24 @@ stat_sig_test <- test_sig(output_TMB, rigorous = T)
 
 ## Test for growth rate bounds
 ## Run SFA models first
-sfa_model <- sfa_bounds(input_data, model_info$yvar, transform = "log", panelvar = "iso3", yearvar = "year")
+sfa_model <- sfa_bounds(input_data, model_info$yvar, 
+  transform = metadata_list$transform, 
+  panelvar = "iso3", 
+  yearvar = "year",
+  plot = FALSE
+)
 
-## Test bounds
+## Check if forecasts are outside the bounds
 bounds_test <- test_bounds(
   data = mean_forecast,
   depvar = "yvar",
-  rev_trans = "exp",
+  rev_trans = metadata_list$inv_transform,
   predict_years = c(metadata_list$end_fit, metadata_list$end_FC),
   panelvar = "iso3",
   yearvar = "year",
   sfa_output = sfa_model
 )
 
-
-## Test for empirical priors (will be done in ensemble collector)
 
 
 ## If all of our bounds failed, stop model
@@ -192,7 +199,10 @@ if (sum(stat_sig_test, bounds_test) != 2) {
 ## (3.4) Create residuals
 ################################################
 
-residuals <- create_residuals(tmb_output_obj = output_TMB, tmb_data_param = data_params)
+residuals <- create_residuals(
+  tmb_output_obj = output_TMB, 
+  tmb_data_param = data_params
+)
 
 ## Get the statistics we usually care about from the resids (MAD, median, mean, SD, etc)
 level_resid_stats <- create_stats(data = residuals, "iso3", variable = "level_resid")
@@ -233,18 +243,18 @@ data_params_OOS <- make_data_param(
   end_fit = eval(metadata_list$end_fit - oos_years),
   end_FC = metadata_list$end_fit,
   chaos = metadata_list$chaos,
-  ar_constrain = model_info$ar_constrain
+  ar_constrain = model_info$ar_constrain,
+  int_decay = model_info$int_decay
 )
 
 
-
+## Run model
 system.time(tryCatch(output_TMB_OOS <- run_model(
   data_params = data_params_OOS,
   model = "AFModel",
   verbose = F
 ),
-error = function(e) {
-  # print(e)
+error = function(e) {  
   print(paste0("Model couldn't be run:", e))
   record_model_and_stop(model, variable = "gdp", comment, date, type = "failed")
 }
@@ -266,34 +276,31 @@ if (output_TMB_OOS$opt$convergence == 1 | output_TMB_OOS$FC_model$pdHess == F) {
 
 
 ### Make a dataset for mean estimation data
-mean_est_data_OOS <- prep_data_for_forecast(tmb_obj = output_TMB_OOS$obj, tmb_data_param = data_params_OOS)
+mean_est_data_OOS <- prep_data_for_forecast(
+  tmb_obj = output_TMB_OOS$obj,
+  tmb_data_param = data_params_OOS
+)
 
-### Forecast
+### Forecast and convert to level space
 mean_forecast_OOS <- make_forecast(
   mean_est_data_obj = mean_est_data_OOS,
   tmb_output_object = output_TMB_OOS,
   tmb_data_param = data_params_OOS,
   add_residual = F,
-  transform = "exp"
+  transform = metadata_list$inv_transform
 )
 
 print("Mean forecast for OOS run predicted")
 
-# i='USA'; plot(mean_forecast[iso3==i, .(year, yvar)], type = 'l', col='red'); lines(mean_forecast_OOS[iso3==i, .(year, yvar )], type = 'l', col='blue')
-
 
 
 ################################################
-## (4.3) Generate RMSE by regions
+## (4.3) Generate RMSE (maybe Chaos, maybe not!)
 ################################################
 
+
+## Prep location, region and super region info
 loc_DT_regs <- unique(input_data[, .(iso3, region_name, super_region_name)])
-
-
-##################################################
-########## Computing RMSEs (maybe Chaos, maybe not!)
-##################################################
-
 
 if (metadata_list$chaos) {
   RMSE_data <- RMSE_generator_2(
@@ -322,10 +329,11 @@ if (metadata_list$chaos) {
 }
 
 
-
 ## Combine the two forecasts
 colnames(mean_forecast_OOS) <- c("iso3", "year", "yvar_OOS", "ydiff_OOS")
 mean_forecast <- merge(mean_forecast, mean_forecast_OOS, c("iso3", "year"), all.x = T)
+
+
 
 ################################################
 ## (4.4) Save out model info

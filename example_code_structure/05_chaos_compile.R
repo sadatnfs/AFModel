@@ -49,14 +49,13 @@ load(paste0(root_fold, "/summary_files/draws_array.Rdata"))
 
 
 ## Set up foreach environment
-registerDoParallel(cores = 10)
+registerDoParallel(cores = 15)
 
 
 print("Bring in the draws to memory")
 system.time(draws_data <- foreach(f = rmse_distro$array_grid[, model_number]) %dopar% {
 
   ## Load the diff draws
-  # load(paste0(root_fold, "/draws/", f, ".Rdata"))
   return(data.table(read_feather(paste0(root_fold, "/draws/", f, ".feather"))))
 })
 
@@ -94,11 +93,6 @@ year_oos <- lapply(c(1:metadata_list$oos_years), function(x) {
 ################################################
 
 
-# print("Compile the diff draws for each OOS unit and Chaos them")
-# system.time(all_draws_for_now <- rbindlist(lapply(c(1:length(year_oos)), function(o) {
-#   country_looper(o, year_oos[[o]], draw_type = 'diff')
-# })))
-
 if (chaos == "T" | chaos == T | chaos == "TRUE") {
   print("Compile the diff draws for a single OOS unit and Chaos them")
   system.time(all_draws_for_now <- country_looper(
@@ -116,11 +110,6 @@ if (chaos == "T" | chaos == T | chaos == "TRUE") {
     colnames(first_lev_year) <- c("iso3", "year", paste0("lev_", c(1:N_draws)))
 
 
-
-    ## Merge on lev, and sub out the first year of data with draw_*
-    # all_draws_for_now <- merge(all_draws_for_now, first_lev_year, c('iso3','year'), all.x=T)
-    # all_draws_for_now[year == metadata_list$start_year, paste0('draw_', c(1:N_draws)):= lapply(c(1:N_draws), function(x) get(paste0('lev_', x)))]
-    # all_draws_for_now[, paste0('lev_', c(1:N_draws)):= NULL]
   }
 
   stopImplicitCluster()
@@ -145,12 +134,6 @@ if (chaos == "T" | chaos == T | chaos == "TRUE") {
   ))
 
 
-  # print("Get just the first year of draw in levels")
-  # system.time(first_lev_year <- country_looper(oos_input = NA, metadata_list$start_year, draw_type = 'level',
-  #                                              input_rmse_data = rmse_distro$data,  draws_data = draws_data))
-  #
-  # ## Rbind this first lev on to the diffs
-  # all_draws_for_now <- rbindlist(list(all_draws_for_now, first_lev_year), use.names = T)
   setkeyv(all_draws_for_now, c("iso3", "year"))
 
   stopImplicitCluster()
