@@ -17,8 +17,8 @@ upload_data_to_db <- function(upload_prepz) {
 
   ## Open connection
   dbconn <- dbConnect(MySQL(),
-    user = "rt_uploader", password = "rt_uploader100",
-    dbname = "forecasting", host = "dex-modelingdb-d01.ihme.washington.edu"
+    user = "XXX", password = "XXX",
+    dbname = "XXX", host = "XXX"
   )
 
 
